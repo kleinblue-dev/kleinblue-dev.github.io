@@ -5,3 +5,6 @@ verify/_data.new.js
 verify/diag.cjs
 verify/splice.cjs
 verify/og-src.html
+verify/_*.cjs
+verify/shots-live/
+verify/*.md

@@ -21,9 +21,9 @@
 - **命令面板 `⌘K` / `Ctrl+K`**：搜作品、跳区块、切主题、切语言、复制邮箱；`↑↓` 选择、`↵` 执行、`esc` 关闭
 - **主题**：浅色 / 深色，跟随系统，选择保存在 localStorage，首屏无闪烁
 - **语言**：中 / 英，全站文案与作品文案同步切换
-- **在线预览**：抽屉里点一下才加载第三方页面，首屏不为它付钱
-- **无 JS 兜底**：`<noscript>` 里是一份可点的完整作品清单
-- **可访问性**：跳过链接、landmark、键盘可达、焦点环、`inert` 抽屉、`aria-live` 结果计数、`prefers-reduced-motion` 降级
+- **在线预览**：抽屉里点一下才加载第三方页面（带 `sandbox`），首屏不为它付钱；切语言不重置
+- **无 JS 兜底**：`<noscript>` 里是一份可点的完整作品清单，放在作品区内，死控件同时隐藏
+- **可访问性**：跳过链接、landmark、键盘可达、焦点环、`inert` 抽屉与背景、模态 Tab 陷阱、`aria-live` 结果计数、IME 组合输入守卫、`prefers-reduced-motion` 降级
 
 ## 怎么改（1 分钟）
 
@@ -37,12 +37,14 @@
 需要 Node 20+ 与本机 Playwright 的 Chromium（`CHROME_PATH` 可覆盖）。
 
 ```powershell
-node verify/shoot.cjs   # 功能断言 + 多尺寸/主题/语言截图
-node verify/audit.cjs   # 布局、对比度、可访问性、响应式指标
+node verify/shoot.cjs   # 功能断言 + 多尺寸/主题/语言截图（27 项）
+node verify/audit.cjs   # 布局、对比度、可访问性、响应式指标（37 项）
+node verify/fixes.cjs   # 交互缺陷回归：IME、遮罩竞态、历史、焦点、Tab 陷阱（25 项）
+node verify/live.cjs    # 对线上站点实测：HTTP/性能/零外部请求/深链/demo 可达（17 项）
 ```
 
-两个脚本都会自己起一个本地静态服务（端口 4399 / 4401），不会发外部请求。
-`shoot.cjs` 27 项断言、`audit.cjs` 37 项指标，当前全绿（2026-10-29）。
+前三个脚本会自己起本地静态服务（端口 4399 / 4401 / 4412），不发外部请求；`live.cjs` 打的是线上 URL。
+当前全绿：27 / 37 / 25 / 17（2026-10-29）。
 
 ## 部署
 

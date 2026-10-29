@@ -19,6 +19,9 @@
 <meta property="og:locale:alternate" content="en_US" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23002FA7'/%3E%3Ccircle cx='32' cy='32' r='12.5' fill='%23f5f4f1'/%3E%3C/svg%3E" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"克莱因蓝","alternateName":"kleinblue-dev","url":"https://kleinblue-dev.github.io/","sameAs":["https://github.com/kleinblue-dev"],"description":"独立开发者：网页小游戏、离线小工具、可复现的技术笔记。","knowsAbout":["单文件前端","离线应用","Canvas","Python","可复现研究"]}
+</script>
 <style>
   /* ============================================================
      设计令牌
@@ -355,31 +358,36 @@
 </script>
 </head>
 <body>
+<noscript><style>
+  /* 无 JS：隐藏所有 JS 驱动的控件与空区块，只保留能读的内容 */
+  .tools,.nav-links,.toolbar,.search,#chips,#cards,#heroAside,#timeline,#contactGrid,#principles{display:none !important;}
+  .empty{display:none !important;}
+</style></noscript>
 <a class="skip" href="#work" data-i18n="skip">跳到作品</a>
 <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="#top" aria-label="kleinblue-dev 首页">
+    <a class="brand" href="#top" aria-label="kleinblue-dev 首页" data-i18n-aria="aria.brand">
       <span class="brand-mark" aria-hidden="true"><i></i></span>
       <b>克莱因蓝</b>
       <span>kleinblue-dev</span>
     </a>
-    <nav class="nav-links" aria-label="主导航">
+    <nav class="nav-links" aria-label="主导航" data-i18n-aria="aria.nav">
       <a href="#work" data-nav="work" data-i18n="nav.work">作品</a>
       <a href="#timeline" data-nav="timeline" data-i18n="nav.timeline">时间线</a>
       <a href="#about" data-nav="about" data-i18n="nav.about">做法</a>
       <a href="#contact" data-nav="contact" data-i18n="nav.contact">联系</a>
     </nav>
     <div class="tools">
-      <button class="tool-btn" id="btnPalette" type="button" aria-label="打开命令面板">
+      <button class="tool-btn" id="btnPalette" type="button" aria-label="打开命令面板" data-i18n-aria="aria.paletteBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <span data-i18n="tool.search">搜索</span><kbd>⌘K</kbd>
+        <span data-i18n="tool.search">搜索</span><kbd id="kbdHint">⌘K</kbd>
       </button>
-      <button class="tool-btn" id="btnTheme" type="button" aria-label="切换主题" title="切换主题">
+      <button class="tool-btn" id="btnTheme" type="button" aria-label="切换主题" title="切换主题" data-i18n-aria="aria.theme">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg>
       </button>
-      <button class="tool-btn" id="btnLang" type="button" aria-label="切换语言" title="Switch language">中 / EN</button>
+      <button class="tool-btn" id="btnLang" type="button" aria-label="切换语言" title="Switch language" data-i18n-aria="aria.lang">中 / EN</button>
     </div>
   </div>
 </header>
@@ -405,13 +413,13 @@
             </button>
           </div>
           <div class="stats">
-            <div class="stat"><b>08</b><span data-i18n="stat.repos">公开作品</span></div>
-            <div class="stat"><b>03</b><span data-i18n="stat.live">在线可玩</span></div>
+            <div class="stat"><b id="statRepos">08</b><span data-i18n="stat.repos">公开作品</span></div>
+            <div class="stat"><b id="statLive">03</b><span data-i18n="stat.live">在线可玩</span></div>
             <div class="stat"><b>0</b><span data-i18n="stat.requests">本站外部请求</span></div>
           </div>
         </div>
-        <aside class="hero-aside" aria-label="作品索引">
-          <div class="aside-head"><span data-i18n="aside.title">作品索引</span><span data-i18n="aside.count">8 / 8</span></div>
+        <aside class="hero-aside" aria-label="作品索引" data-i18n-aria="aria.aside">
+          <div class="aside-head"><span data-i18n="aside.title">作品索引</span><span id="asideCount">8 / 8</span></div>
           <div class="aside-list" id="heroAside"></div>
         </aside>
       </div>
@@ -430,11 +438,11 @@
         <a class="sec-link" href="https://github.com/kleinblue-dev" target="_blank" rel="noopener noreferrer">github.com/kleinblue-dev ↗</a>
       </div>
 
-      <div class="toolbar" role="group" aria-label="筛选作品">
+      <div class="toolbar" role="group" aria-label="筛选作品" data-i18n-aria="aria.filter">
         <div class="chips" id="chips"></div>
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input id="searchInput" type="search" data-i18n-ph="work.search" placeholder="搜索作品 / 技术栈" autocomplete="off" aria-label="搜索作品" />
+          <input id="searchInput" type="search" data-i18n-ph="work.search" placeholder="搜索作品 / 技术栈" autocomplete="off" aria-label="搜索作品" data-i18n-aria="aria.search" />
           <span class="esc" aria-hidden="true">/</span>
         </label>
       </div>
@@ -445,6 +453,23 @@
         <b data-i18n="work.empty.title">没有匹配</b>
         <span data-i18n="work.empty.desc">换个关键词，或按 ⌘K 全局搜索。</span>
       </div>
+
+      <noscript>
+        <div class="nojs">
+          <h2>作品清单（无 JavaScript 版本）</h2>
+          <ul>
+            <li><a href="https://kleinblue-dev.github.io/mojian/">墨间 mojian</a> — 八步水墨自我陪伴练习，单文件、离线</li>
+            <li><a href="https://kleinblue-dev.github.io/chaitai/">拆台 chaitai</a> — Canvas 横版动作游戏，零第三方代码与素材</li>
+            <li><a href="https://kleinblue-dev.github.io/ink-mind/">墨心 ink-mind</a> — 三张纸的水墨小游戏</li>
+            <li><a href="https://github.com/kleinblue-dev/open-llm-vtuber-ws-drain-fix">空会话竞态修复</a> — websockets 断言竞态根因，14 行锁补丁 + 复现脚本</li>
+            <li><a href="https://github.com/kleinblue-dev/quant-project">量化研究方法</a> — 7 次否证、事前登记、6 份自检（91 项 + 4 组）</li>
+            <li><a href="https://github.com/kleinblue-dev/cmover">cmover</a> — C 盘大文件夹搬到 D/E 盘，原地留目录联接</li>
+            <li><a href="https://github.com/kleinblue-dev/pet-memorial-pipeline">宠物纪念管线</a> — 选图 → 修复 → 活化 → 升清插帧 → 总装</li>
+            <li><a href="https://github.com/kleinblue-dev/minimax-h3-low-vram-notes">MiniMax H3 低显存笔记</a> — 6–8GB 显存的三条路线对照</li>
+          </ul>
+          <p>联系：<a href="https://github.com/kleinblue-dev">github.com/kleinblue-dev</a></p>
+        </div>
+      </noscript>
     </div>
   </section>
 
@@ -508,7 +533,7 @@
       <div class="meta" id="drawerMeta"></div>
       <h2 id="drawerTitle"></h2>
     </div>
-    <button class="icon-btn" id="drawerClose" type="button" aria-label="关闭">
+    <button class="icon-btn" id="drawerClose" type="button" aria-label="关闭" data-i18n-aria="aria.close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
   </div>
@@ -516,7 +541,7 @@
 </aside>
 
 <!-- 命令面板 -->
-<div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="命令面板" aria-hidden="true">
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="命令面板" data-i18n-aria="aria.palette" aria-hidden="true">
   <div class="palette-bg" data-close-palette></div>
   <div class="palette-box">
     <div class="palette-input">
@@ -524,7 +549,7 @@
       <input id="paletteInput" type="text" role="combobox" aria-expanded="true" aria-controls="paletteList" aria-autocomplete="list" aria-label="命令面板搜索" data-i18n-aria="palette.aria" data-i18n-ph="palette.ph" placeholder="搜索作品、跳转、切换主题…" autocomplete="off" spellcheck="false" />
       <kbd>ESC</kbd>
     </div>
-    <div class="palette-list" id="paletteList" role="listbox" aria-label="命令列表"></div>
+    <div class="palette-list" id="paletteList" role="listbox" aria-label="命令列表" data-i18n-aria="aria.paletteList"></div>
     <div class="palette-foot">
       <span><kbd>↑↓</kbd><span data-i18n="palette.nav">选择</span></span>
       <span><kbd>↵</kbd><span data-i18n="palette.run">执行</span></span>
@@ -535,21 +560,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<noscript>
-  <div class="wrap nojs">
-    <h2>作品清单（无 JavaScript 版本）</h2>
-    <ul>
-      <li><a href="https://kleinblue-dev.github.io/mojian/">墨间 mojian</a> — 八步水墨自我陪伴练习，单文件、离线</li>
-      <li><a href="https://kleinblue-dev.github.io/chaitai/">拆台 chaitai</a> — 单文件 HTML5 Canvas 横版动作游戏</li>
-      <li><a href="https://kleinblue-dev.github.io/ink-mind/">墨心 ink-mind</a> — 三张纸的水墨小游戏</li>
-      <li><a href="https://github.com/kleinblue-dev/open-llm-vtuber-ws-drain-fix">open-llm-vtuber 空会话根因修复</a> — 14 行补丁 + 复现脚本</li>
-      <li><a href="https://github.com/kleinblue-dev/minimax-h3-low-vram-notes">MiniMax H3 低显存笔记</a> — 6–8GB 路线对照与速度锚点</li>
-      <li><a href="https://github.com/kleinblue-dev/pet-memorial-pipeline">宠物纪念视频管线</a> — 修复 → 活化 → 升清 → 合成，全本地</li>
-      <li><a href="https://github.com/kleinblue-dev/quant-project">量化项目</a> — A 股数据管道 + 回测引擎 + 7 次否证</li>
-      <li><a href="https://github.com/kleinblue-dev/cmover">cmover</a> — 把大文件夹搬到别的盘，留目录联接</li>
-    </ul>
-  </div>
-</noscript>
+
 
 <script>
 (function(){
@@ -595,7 +606,7 @@
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '不设账号体系，也不该留下可被追踪的痕迹。', en: 'No accounts, and no trace that could be tracked.' } },
         { k: { zh: '决策', en: 'Decision' }, v: { zh: '进度存本机，清空即消失；页面带 noindex 与 robots 禁抓。', en: 'Progress stays local and clears with a click; the page ships noindex and a robots block.' } }
       ],
-      stack: ['单文件 HTML', '内联 CSS/JS', 'localStorage'],
+      stack: ['单文件 HTML', '内联 CSS/JS', 'localStorage', 'GitHub Pages'],
       live: 'https://kleinblue-dev.github.io/mojian/',
       source: 'https://github.com/kleinblue-dev/mojian',
       language: 'HTML', license: '未声明',
@@ -623,9 +634,9 @@
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '不能依赖第三方库，也不能有素材包要下载。', en: 'No third-party libraries and no asset packs to download.' } },
         { k: { zh: '决策', en: 'Decision' }, v: { zh: '画面、音效、敌人行为全部由 game.js 程序化生成。', en: 'Visuals, audio and enemy behaviour are all generated by game.js.' } },
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '改一版游戏就可能坏掉，必须能反复验收。', en: 'One change can break the game, so it must be re-verifiable.' } },
-        { k: { zh: '决策', en: 'Decision' }, v: { zh: '仓库带 82 个开发期测试/诊断脚本，改完先跑再发布。', en: 'The repo carries 82 dev-time test/diagnostic scripts; run them before shipping.' } }
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: 'tools/ 下留 82 个开发期文件（gate / falsify / verify / diag 脚本为主），改完先跑再发布。', en: 'tools/ holds 82 dev-time files (mostly gate / falsify / verify / diag scripts); run them before shipping.' } }
       ],
-      stack: ['HTML5 Canvas', 'JavaScript', '程序化画面/音效', 'puppeteer-core'],
+      stack: ['HTML5 Canvas', 'JavaScript', '程序化画面/音效', 'puppeteer-core', 'GitHub Pages'],
       live: 'https://kleinblue-dev.github.io/chaitai/',
       source: 'https://github.com/kleinblue-dev/chaitai',
       language: 'JavaScript', license: 'MIT',
@@ -646,8 +657,8 @@
         en: 'A three-paper ink mini game that hands you a raw signal card at the end.'
       },
       what: {
-        zh: '单文件水墨小游戏：三张纸，随便落墨，结束时输出一张「原始信号卡」。浏览器直接打开，手机也能玩；全部计算在本地。仓库只放可运行的那一个 index.html，源码里带检索指纹，搬到非授权地址会显示提示而不是游戏本体。',
-        en: 'A single-file ink mini game: three sheets, paint freely, and it ends with a raw signal card. Opens straight in a browser and works on phones; all computation is local. The repo holds only the runnable index.html, which carries a searchable fingerprint and shows a notice — not the game — when opened from an unauthorised address.'
+        zh: '单文件水墨小游戏：三张纸，随便落墨，结束时输出一张「原始信号卡」。浏览器直接打开，手机也能玩；全部计算在本地。仓库里唯一能运行的文件就是那个 index.html，源码里带检索指纹，搬到非授权地址会显示提示而不是游戏本体。',
+        en: 'A single-file ink mini game: three sheets, paint freely, and it ends with a raw signal card. Opens straight in a browser and works on phones; all computation is local. The only runnable file in the repo is that index.html, which carries a searchable fingerprint and shows a notice — not the game — when opened from an unauthorised address.'
       },
       fp: [
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '结果只属于玩的人，不能上传任何数据。', en: 'Results belong to the player, nothing may be uploaded.' } },
@@ -655,7 +666,7 @@
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '分发只允许一个文件。', en: 'Distribution must be exactly one file.' } },
         { k: { zh: '决策', en: 'Decision' }, v: { zh: 'index.html 内联全部内容，仓库里没有第二个运行时文件。', en: 'All content is inlined into index.html; no second runtime file exists in the repo.' } }
       ],
-      stack: ['单文件 HTML', '零外部请求', '离线可玩'],
+      stack: ['单文件 HTML', '零外部请求', '离线可玩', 'GitHub Pages'],
       live: 'https://kleinblue-dev.github.io/ink-mind/',
       source: 'https://github.com/kleinblue-dev/ink-mind',
       language: 'HTML', license: '保留所有权利',
@@ -685,7 +696,7 @@
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '必须能证明「确实修好了」，而不是看起来修好了。', en: 'Must prove the fix, not just look like one.' } },
         { k: { zh: '决策', en: 'Decision' }, v: { zh: '附独立检测脚本：不依赖前端即可复现空帧并验证修复。', en: 'Ship a standalone check that reproduces the empty frame and verifies the fix without the frontend.' } }
       ],
-      stack: ['Python', 'asyncio.Lock', 'websockets legacy', 'uvicorn'],
+      stack: ['Python', 'asyncio.Lock', 'websockets legacy', 'uvicorn', 'git apply 补丁'],
       live: '',
       source: 'https://github.com/kleinblue-dev/open-llm-vtuber-ws-drain-fix',
       language: 'Python', license: 'MIT',
@@ -706,14 +717,14 @@
         en: 'Quant research built to falsify: seven falsifications, pre-registration, strict no-lookahead.'
       },
       what: {
-        zh: '先建一套能判定想法真假的可复现流程（份额模型回测引擎、严格无前视、事前登记），再用它检验 6 个流行策略与 1 条「用 LLM 挖因子」的方法论路径。附 12 份报告、6 张数据表、91 项自检脚本，以及一个零依赖、断网可开的 3 分钟单页看板。',
-        en: 'First build a reproducible pipeline that can judge an idea true or false (share-based backtest engine, strict no-lookahead, pre-registered hypotheses); then use it to test six popular strategies plus one methodology path — LLM-generated factors. Ships 12 reports, six data tables, 91 self-check items and a zero-dependency one-page overview.'
+        zh: '先建一套能判定想法真假的可复现流程（份额模型回测引擎、严格无前视、事前登记），再用它检验 6 个流行策略与 1 条「用 LLM 挖因子」的方法论路径。附 12 份报告、6 张数据表、6 份自检脚本（91 项 + 4 组），以及一个零依赖、断网可开、3 分钟看完的单页看板。',
+        en: 'First build a reproducible pipeline that can judge an idea true or false (share-based backtest engine, strict no-lookahead, pre-registered hypotheses); then use it to test six popular strategies plus one methodology path — LLM-generated factors. Ships 12 reports, six data tables, six self-check scripts (91 items in 4 groups), and a zero-dependency, offline, three-minute one-page overview.'
       },
       fp: [
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '任何结论都必须能被数据否掉。', en: 'Every claim must be falsifiable by data.' } },
         { k: { zh: '决策', en: 'Decision' }, v: { zh: '先写事前登记与否证条件再跑回测；被否掉的假设照样留档。', en: 'Pre-register the falsification condition before backtesting; keep refuted hypotheses on record.' } },
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '回测最容易出的错是前视偏差，而它不会自己报错。', en: 'The likeliest error in backtesting is lookahead, and it never raises.' } },
-        { k: { zh: '决策', en: 'Decision' }, v: { zh: '把无前视写进引擎，CI 跑单元测试；真数据自检另立一套，不复用同一份代码。', en: 'Bake no-lookahead into the engine, unit-test it in CI, and keep real-data checks as a separate suite.' } }
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '把无前视写进引擎，CI 跑单元测试；真数据自检另立一套，不复用同一份代码。', en: 'Bake no-lookahead into the engine and unit-test it in CI; keep real-data checks as a separate suite that does not reuse the same code.' } }
       ],
       stack: ['Python', 'pandas', 'numpy', 'pytest', 'SQLite', 'GitHub Actions'],
       live: '',
@@ -732,12 +743,12 @@
       id: 'cmover', kind: 'tool', updated: '2026-09-28',
       title: { zh: 'cmover', en: 'cmover' },
       tagline: {
-        zh: '把 C 盘大文件夹搬到 D 盘，原地留目录联接：逐文件校验通过才动原目录。',
-        en: 'Moves big C: folders to D: and leaves a junction behind — the original is touched only after every file verifies.'
+        zh: '把 C 盘大文件夹搬到 D/E 盘，原地留目录联接：逐文件校验通过才动原目录。',
+        en: 'Moves big C: folders to D:/E: and leaves a junction behind — the original is touched only after every file verifies.'
       },
       what: {
-        zh: '纯离线的 Windows 小工具。搬运顺序是「复制 → 逐文件校验 → 全通过才把原目录改名备份 → 建联接 → 验证联接 → 删备份」，任一步失败 C 盘一个字节不动，并支持 --undo 撤销。单 exe，用系统自带 csc 编译，零第三方依赖。',
-        en: 'An offline Windows utility. The order is: copy, verify every file, rename the original to a backup only if all checks pass, create the junction, verify it, then delete the backup. A failed step leaves C: untouched, and --undo rolls back. One exe, built with the bundled csc, no third-party dependencies.'
+        zh: '纯离线的 Windows 小工具。把 C 盘占地方的大文件夹搬到 D/E 盘，原地建一个目录联接，桌面快捷方式和写死的路径照常工作。搬运顺序是「复制 → 逐文件校验 → 全通过才把原目录改名备份 → 建联接 → 验证联接 → 删备份」，任一步失败 C 盘一个字节不动，并支持 --undo 撤销。单 exe，用系统自带 csc 编译，零第三方依赖。',
+        en: 'An offline Windows utility that moves big C: folders to D:/E: and leaves a directory junction behind, so shortcuts and hard-coded paths keep working. The order is: copy, verify every file, rename the original to a backup only if all checks pass, create the junction, verify it, then delete the backup. A failed step leaves C: untouched, and --undo rolls back. One exe, built with the bundled csc, no third-party dependencies.'
       },
       fp: [
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '不能在用户机器上装运行时或第三方库。', en: 'No runtime or third-party libraries on the user’s machine.' } },
@@ -762,18 +773,18 @@
       id: 'pet-memorial-pipeline', kind: 'tool', updated: '2026-10-07',
       title: { zh: '宠物纪念管线', en: 'Pet Memorial Pipeline' },
       tagline: {
-        zh: '从宠物照片到 1080p 纪念短片的五阶段本地管线。',
-        en: 'A five-stage local pipeline from pet photos to a 1080p memorial short.'
+        zh: '从宠物照片到 1080p 纪念短片的五阶段管线：选图 → 修复 → 活化 → 升清插帧 → 总装。',
+        en: 'A five-stage pipeline from pet photos to a 1080p memorial short: pick, restore, animate, upscale, assemble.'
       },
       what: {
-        zh: '15–30 张宠物照片做成 1.5–3 分钟 1080p 短片：修复（Real-ESRGAN）→ 活化（Wan2.1-VACE-1.3B，走 ComfyUI API）→ 升清插帧慢放（Real-CUGAN）→ ffmpeg 总装 → 交付包。仓库只放 tools/ 与 docs/，数据目录按需生成。',
-        en: 'Turns 15–30 pet photos into a 1.5–3 minute 1080p short: restore with Real-ESRGAN, animate with Wan2.1-VACE-1.3B through the ComfyUI API, upscale/interpolate/slow-mo with Real-CUGAN, assemble with ffmpeg, then bundle. The repo ships only tools/ and docs/; data folders are generated on demand.'
+        zh: '15–30 张宠物照片做成 1.5–3 分钟 1080p 短片。五阶段：选图 → 修复（Real-ESRGAN x4）→ 活化（Wan2.1-VACE-1.3B，每张 61 帧微动，走 ComfyUI API）→ 升清插帧慢放（Real-CUGAN x2）→ ffmpeg 总装。修复、活化、升清、总装全在本机跑；只有选图会请求 Openverse / Wikimedia 的公开授权图片，仓库只放 tools/ 与 docs/。',
+        en: 'Turns 15–30 pet photos into a 1.5–3 minute 1080p short. Five stages: pick, restore (Real-ESRGAN x4), animate (Wan2.1-VACE-1.3B, 61 frames of subtle motion per photo, via the ComfyUI API), upscale/interpolate/slow-mo (Real-CUGAN x2), then assemble with ffmpeg. Restore, animate, upscale and assemble all run locally; only photo picking calls Openverse / Wikimedia for openly licensed images. The repo ships only tools/ and docs/.'
       },
       fp: [
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '素材是旧照片，清晰度参差，且不能上传云端。', en: 'Old photos of uneven quality, which cannot go to a cloud service.' } },
-        { k: { zh: '决策', en: 'Decision' }, v: { zh: '五个阶段全本地，每段可单独重跑，坏在哪步只重跑那步。', en: 'Five fully local stages, each re-runnable alone; redo only the failed one.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '修复、活化、升清、总装全在本机；只有选图用公开授权图库的 API，并保留来源清单。', en: 'Restore, animate, upscale and assemble locally; only photo picking uses an open-licence image API, with a source manifest kept.' } },
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '单卡只有 6GB 显存。', en: 'Only 6 GB of VRAM on one card.' } },
-        { k: { zh: '决策', en: 'Decision' }, v: { zh: '分阶段串行跑，避免修复、活化、升清同时压在显存里。', en: 'Run stages serially so restore, animate and upscale never share VRAM at once.' } }
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '分阶段串行跑，避免修复、活化、升清同时压在显存里；坏在哪步只重跑那步。', en: 'Run stages serially so restore, animate and upscale never share VRAM at once; redo only the failed stage.' } }
       ],
       stack: ['Python', 'ComfyUI API', 'Wan2.1-VACE-1.3B', 'Real-ESRGAN', 'Real-CUGAN', 'ffmpeg'],
       live: '',
@@ -784,7 +795,7 @@
         en: 'Checked: the Bilibili sample BV16bHy6mEqn (200) and docs/measured-2026-10-07.md are reachable. Figures such as ~11.7 min per photo and a 96.9 s cut from 13 photos are README text, not re-run here (needs ComfyUI, models and a GPU).'
       },
       ev: [
-        { k: 'video', name: '96.9 秒 / 13 张', url: 'https://www.bilibili.com/video/BV16bHy6mEqn' },
+        { k: 'video', name: 'B 站样片（README 称 96.9 秒 / 13 张，未播放核对）', url: 'https://www.bilibili.com/video/BV16bHy6mEqn' },
         { k: 'report', name: 'measured-2026-10-07.md', url: 'https://github.com/kleinblue-dev/pet-memorial-pipeline/blob/main/docs/measured-2026-10-07.md' }
       ]
     },
@@ -800,12 +811,12 @@
         en: 'Answers whether a 6–8 GB-VRAM laptop can run MiniMax H3 locally: SGLang, WanGP and FreeVideo compared side by side with minimum VRAM and achievable resolution, plus per-file weight sizes from HF, community speed anchors, licence points and a download list. The verdict is restrained: on 6 GB there is exactly one route (WanGP at 480p), and the author archived the research instead of installing.'
       },
       fp: [
-        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '硬件只有 6GB 显存，官方权重总量约 498GB。', en: 'Only 6 GB of VRAM against roughly 498 GB of official weights.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '硬件只有 6GB 显存，官方权重总量约 498.5GB。', en: 'Only 6 GB of VRAM against roughly 498.5 GB of official weights.' } },
         { k: { zh: '决策', en: 'Decision' }, v: { zh: '先列路线与最低显存门槛，而不是先下权重。', en: 'Compare routes and minimum VRAM first instead of downloading weights.' } },
         { k: { zh: '约束', en: 'Constraint' }, v: { zh: '笔记的结论要能被别人复核，否则不如不写。', en: 'Conclusions must be checkable by others, or the note is pointless.' } },
         { k: { zh: '决策', en: 'Decision' }, v: { zh: '每个数字标来源与核验日期；估算的明确写「未实跑」，并给出「不装」这个选项。', en: 'Tag every number with its source and date; mark estimates as not run; keep “do not install” as a valid outcome.' } }
       ],
-      stack: ['Markdown', '本地部署调研', '量化/显存分析'],
+      stack: ['Markdown', '本地部署调研'],
       live: '',
       source: 'https://github.com/kleinblue-dev/minimax-h3-low-vram-notes',
       language: '', license: 'MIT',
@@ -823,6 +834,11 @@
   const I18N = {
     zh: {
       'skip': '跳到作品',
+      'page.title': '克莱因蓝 · kleinblue-dev — 做小而完整的东西',
+      'aria.brand': 'kleinblue-dev 首页', 'aria.nav': '主导航', 'aria.paletteBtn': '打开命令面板',
+      'aria.theme': '切换主题', 'aria.lang': '切换语言', 'aria.aside': '作品索引', 'aria.filter': '筛选作品',
+      'aria.search': '搜索作品', 'aria.close': '关闭', 'aria.palette': '命令面板', 'aria.paletteList': '命令列表',
+      'license.none': '未声明', 'license.ar': '保留所有权利', 'license.readonly': '仅授权阅读',
       'nav.work': '作品', 'nav.timeline': '时间线', 'nav.about': '做法', 'nav.contact': '联系',
       'tool.search': '搜索',
       'hero.label': '独立开发者 · 2026',
@@ -875,6 +891,11 @@
     },
     en: {
       'skip': 'Skip to work',
+      'page.title': 'Klein Blue · kleinblue-dev — Small, complete things',
+      'aria.brand': 'kleinblue-dev home', 'aria.nav': 'Main navigation', 'aria.paletteBtn': 'Open command palette',
+      'aria.theme': 'Toggle theme', 'aria.lang': 'Switch language', 'aria.aside': 'Project index', 'aria.filter': 'Filter projects',
+      'aria.search': 'Search projects', 'aria.close': 'Close', 'aria.palette': 'Command palette', 'aria.paletteList': 'Command list',
+      'license.none': 'unstated', 'license.ar': 'all rights reserved', 'license.readonly': 'read-only licence',
       'nav.work': 'Work', 'nav.timeline': 'Timeline', 'nav.about': 'Approach', 'nav.contact': 'Contact',
       'tool.search': 'Search',
       'hero.label': 'Independent developer · 2026',
@@ -927,6 +948,19 @@
     }
   };
 
+  const STACK_I18N = {
+    '单文件 HTML': 'single-file HTML',
+    '内联 CSS/JS': 'inline CSS/JS',
+    '零外部请求': 'zero external requests',
+    '离线可玩': 'offline-ready',
+    '程序化画面/音效': 'procedural art & audio',
+    '系统自带 csc': 'bundled csc',
+    '本地部署调研': 'local deployment research'
+  };
+  const LIC_KEY = { '未声明': 'license.none', '保留所有权利': 'license.ar', '仅授权阅读': 'license.readonly' };
+  function stackText(s) { return state.lang === 'en' ? (STACK_I18N[s] || s) : s; }
+  function licText(l) { if (!l) return ''; return LIC_KEY[l] ? t(LIC_KEY[l]) : l; }
+
   const PRINCIPLES = [
     { zh: ['单文件优先', '一个 HTML 能跑完就不拆构建链；分发 = 复制一个文件。'], en: ['One file first', 'If one HTML file can do it, skip the build chain. Distribution means copying a file.'] },
     { zh: ['零依赖', '不引 CDN、不引第三方脚本；离线可用是验收项，不是口号。'], en: ['Zero dependencies', 'No CDN, no third-party scripts. Working offline is an acceptance test, not a slogan.'] },
@@ -942,7 +976,7 @@
   const fmtDate = (d) => String(d || '').replace(/-/g, '.');
   const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const state = { lang: 'zh', theme: 'light', filter: 'all', query: '', openId: null, lastFocus: null };
+  const state = { lang: 'zh', theme: 'light', filter: 'all', query: '', openId: null, drawerReturn: null, paletteReturn: null, previewFor: null };
 
   try {
     const l = localStorage.getItem('kb-lang');
@@ -971,6 +1005,7 @@
     $$('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
     $$('[data-i18n-ph]').forEach(el => { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
     $$('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
+    document.title = t('page.title');
     renderAll();
   }
   function toggleLang() {
@@ -1016,6 +1051,7 @@
 
   /* ---------------- 渲染 ---------------- */
   function renderChips() {
+    const focusedKind = (document.activeElement && document.activeElement.closest('#chips')) ? document.activeElement.getAttribute('data-kind') : null;
     const counts = { all: DATA.length };
     DATA.forEach(p => { counts[p.kind] = (counts[p.kind] || 0) + 1; });
     const order = ['all', 'web', 'tool', 'research', 'fix'];
@@ -1028,6 +1064,7 @@
       state.filter = btn.getAttribute('data-kind');
       renderChips(); renderCards();
     }));
+    if (focusedKind) { const fb = $('#chips .chip[data-kind="' + state.filter + '"]'); if (fb) fb.focus(); }
   }
 
   function cardHTML(p, i) {
@@ -1037,7 +1074,7 @@
       + '<span class="kind">' + esc(t('kind.' + p.kind)) + '</span></div>'
       + '<h3>' + esc(p.title[state.lang]) + (live ? '<i class="live" aria-hidden="true"></i>' : '') + '</h3>'
       + '<p>' + esc(p.tagline[state.lang]) + '</p>'
-      + '<div class="stack">' + p.stack.slice(0, 3).map(s => '<span>' + esc(s) + '</span>').join('') + '</div>'
+      + '<div class="stack">' + p.stack.slice(0, 3).map(s => '<span>' + esc(stackText(s)) + '</span>').join('') + '</div>'
       + '<div class="card-foot"><span>' + fmtDate(p.updated) + (live ? ' · ' + esc(t('meta.live')) : '') + '</span>'
       + '<span class="go">' + esc(t('drawer.open')) + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>'
       + '<button class="card-more" type="button" aria-label="' + esc(p.title[state.lang]) + ' — ' + esc(t('drawer.open')) + '"></button>'
@@ -1111,9 +1148,37 @@
     $('#footMeta').textContent = '© ' + CONFIG.year + ' kleinblue-dev · ' + (state.lang === 'zh' ? '核验 ' : 'verified ') + CONFIG.verifiedAt + ' · ' + DATA.length + (state.lang === 'zh' ? ' 个作品' : ' projects');
   }
 
+  function renderStats() {
+    const live = DATA.filter(p => p.live).length;
+    const r = $('#statRepos'), l = $('#statLive'), a = $('#asideCount');
+    if (r) r.textContent = String(DATA.length).padStart(2, '0');
+    if (l) l.textContent = String(live).padStart(2, '0');
+    if (a) a.textContent = DATA.length + ' / ' + DATA.length;
+  }
+
   function renderAll() {
-    renderChips(); renderCards(); renderAside(); renderTimeline(); renderPrinciples(); renderContact(); renderHeroCta(); renderFoot();
+    renderChips(); renderCards(); renderAside(); renderTimeline(); renderPrinciples(); renderContact(); renderHeroCta(); renderFoot(); renderStats();
     if (state.openId) renderDrawerBody(state.openId);
+  }
+
+  /* ---------------- 模态通用：滚动锁计数 / 背景 inert / Tab 陷阱 ---------------- */
+  let scrollLocks = 0, modalCount = 0, scrimTimer = 0;
+  function lockScroll() { scrollLocks++; document.body.style.overflow = 'hidden'; }
+  function unlockScroll() { scrollLocks = Math.max(0, scrollLocks - 1); if (!scrollLocks) document.body.style.overflow = ''; }
+  function setBgInert(on) {
+    ['.topbar', '#top', 'footer', '.skip'].forEach(sel => { const el = document.querySelector(sel); if (el) el.inert = on; });
+  }
+  function modalOpen() { modalCount++; setBgInert(true); }
+  function modalClosed() { modalCount = Math.max(0, modalCount - 1); if (!modalCount) setBgInert(false); }
+  function trapTab(container, e) {
+    if (!container) return;
+    const f = Array.from(container.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex="-1"])'))
+      .filter(el => el.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (!container.contains(document.activeElement)) { e.preventDefault(); first.focus(); return; }
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
 
   /* ---------------- 抽屉 ---------------- */
@@ -1139,13 +1204,16 @@
     }
 
     html += '<div class="dblock"><h3>' + esc(t('drawer.stack')) + '</h3><div class="stack">'
-      + p.stack.map(s => '<span>' + esc(s) + '</span>').join('') + '</div></div>';
+      + p.stack.map(s => '<span>' + esc(stackText(s)) + '</span>').join('') + '</div></div>';
 
     if (p.live) {
-      html += '<div class="dblock"><h3>' + esc(t('drawer.preview')) + '</h3>'
-        + '<div class="preview" id="previewBox"><div class="preview-cta">'
-        + '<button class="btn-sm solid" type="button" id="loadPreview">' + esc(t('drawer.previewLoad')) + '</button>'
-        + '<span>' + esc(t('drawer.previewHint')) + '</span></div></div></div>';
+      const loaded = state.previewFor === p.id;
+      html += '<div class="dblock"><h3>' + esc(t('drawer.preview')) + '</h3><div class="preview" id="previewBox">'
+        + (loaded
+          ? '<iframe title="' + esc(p.title[state.lang]) + '" src="' + esc(p.live) + '" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>'
+          : '<div class="preview-cta"><button class="btn-sm solid" type="button" id="loadPreview">' + esc(t('drawer.previewLoad')) + '</button>'
+            + '<span>' + esc(t('drawer.previewHint')) + '</span></div>')
+        + '</div></div>';
     }
 
     html += '<div class="dblock"><h3>' + esc(t('drawer.meta')) + '</h3><table class="meta-table">'
@@ -1153,7 +1221,7 @@
       + '<tr><th>' + esc(t('meta.language')) + '</th><td>' + esc(p.language || t('meta.none')) + '</td></tr>'
       + '<tr><th>' + esc(t('meta.kind')) + '</th><td>' + esc(t('kind.' + p.kind)) + '</td></tr>'
       + '<tr><th>' + esc(t('meta.status')) + '</th><td>' + esc(status) + '</td></tr>'
-      + (p.license ? '<tr><th>' + esc(t('meta.license')) + '</th><td>' + esc(p.license) + '</td></tr>' : '')
+      + (p.license ? '<tr><th>' + esc(t('meta.license')) + '</th><td>' + esc(licText(p.license)) + '</td></tr>' : '')
       + '</table></div>';
 
     if (p.verify) {
@@ -1181,7 +1249,8 @@
     drawerBody.innerHTML = html;
     const lp = $('#loadPreview');
     if (lp) lp.addEventListener('click', () => {
-      $('#previewBox').innerHTML = '<iframe title="' + esc(p.title[state.lang]) + '" src="' + esc(p.live) + '" loading="lazy" referrerpolicy="no-referrer"></iframe>';
+      state.previewFor = p.id;
+      $('#previewBox').innerHTML = '<iframe title="' + esc(p.title[state.lang]) + '" src="' + esc(p.live) + '" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>';
       toast(t('toast.preview'));
     });
     const cl = $('#copyLink');
@@ -1190,27 +1259,38 @@
 
   function openProject(id, skipHash) {
     const p = findProject(id); if (!p) return;
+    const wasOpen = !!state.openId && drawer.classList.contains('on');
+    if (!wasOpen) state.drawerReturn = document.activeElement;
+    if (state.previewFor && state.previewFor !== id) state.previewFor = null;
     state.openId = id;
+    clearTimeout(scrimTimer);
+    scrim.hidden = false;
     drawer.inert = false;
     renderDrawerBody(id);
+    drawerBody.scrollTop = 0;
     drawer.classList.add('on'); drawer.setAttribute('aria-hidden', 'false');
-    scrim.hidden = false; requestAnimationFrame(() => scrim.classList.add('on'));
-    document.body.style.overflow = 'hidden';
-    state.lastFocus = document.activeElement;
+    requestAnimationFrame(() => scrim.classList.add('on'));
+    if (!wasOpen) { lockScroll(); modalOpen(); }
     setTimeout(() => { const b = $('#drawerClose'); if (b) b.focus(); }, 60);
-    if (!skipHash) { try { history.pushState({ p: id }, '', '#/work/' + id); } catch (e) { location.hash = '#/work/' + id; } }
+    if (!skipHash) { try { history.replaceState({ p: id }, '', '#/work/' + id); } catch (e) {} }
   }
 
   function closeDrawer() {
     if (!state.openId) return;
     state.openId = null;
-    drawer.inert = true;
+    state.previewFor = null;
     drawer.classList.remove('on'); drawer.setAttribute('aria-hidden', 'true');
     scrim.classList.remove('on');
-    setTimeout(() => { scrim.hidden = true; }, 260);
-    document.body.style.overflow = '';
-    if (state.lastFocus && state.lastFocus.focus) state.lastFocus.focus();
-    if (location.hash.indexOf('#/work/') === 0) { try { history.pushState({}, '', location.pathname + location.search); } catch (e) { location.hash = ''; } }
+    clearTimeout(scrimTimer);
+    scrimTimer = setTimeout(() => { scrim.hidden = true; }, 260);
+    unlockScroll(); modalClosed();
+    const back = state.drawerReturn; state.drawerReturn = null;
+    if (location.hash.indexOf('#/work/') === 0) { try { history.replaceState({}, '', location.pathname + location.search); } catch (e) {} }
+    drawer.inert = true;
+    requestAnimationFrame(() => {
+      if (back && back.isConnected && !drawer.contains(back) && back.focus) back.focus();
+      else { const fb = $('#btnPalette'); if (fb) fb.focus(); }
+    });
   }
 
   $('#drawerClose').addEventListener('click', closeDrawer);
@@ -1218,17 +1298,14 @@
 
   /* 焦点陷阱 + Esc */
   document.addEventListener('keydown', (e) => {
+    if (e.isComposing || e.keyCode === 229) return;
     if (e.key === 'Escape') {
-      if ($('#palette').classList.contains('on')) { closePalette(); return; }
+      if (palette.classList.contains('on')) { closePalette(); return; }
       if (state.openId) { closeDrawer(); return; }
     }
-    if (e.key === 'Tab' && state.openId) {
-      const f = $$('#drawer a[href], #drawer button, #drawer iframe, #drawer [tabindex]:not([tabindex="-1"])')
-        .filter(el => el.offsetParent !== null);
-      if (!f.length) return;
-      const first = f[0], last = f[f.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    if (e.key === 'Tab') {
+      if (palette.classList.contains('on')) { trapTab($('.palette-box'), e); return; }
+      if (state.openId) { trapTab(drawer, e); return; }
     }
   });
 
@@ -1284,6 +1361,7 @@
     paletteList.innerHTML = html;
     paletteSel = 0;
     paintPaletteSel();
+    if (!paletteItems.length) paletteInput.removeAttribute('aria-activedescendant');
     $$('#paletteList .pitem').forEach(el => {
       el.addEventListener('mouseenter', () => { paletteSel = parseInt(el.getAttribute('data-i'), 10); paintPaletteSel(); });
       el.addEventListener('click', () => { const it = paletteItems[parseInt(el.getAttribute('data-i'), 10)]; if (it) it.run(); });
@@ -1297,22 +1375,32 @@
     });
   }
   function openPalette() {
-    buildPalette();
+    if (palette.classList.contains('on')) return;
+    state.paletteReturn = document.activeElement;
+    paletteInput.value = '';
     palette.inert = false;
     palette.classList.add('on'); palette.setAttribute('aria-hidden', 'false');
-    state.lastFocus = document.activeElement;
-    paletteInput.value = '';
+    paletteInput.setAttribute('aria-expanded', 'true');
+    if (state.openId) drawer.inert = true;
+    lockScroll(); modalOpen();
     buildPalette();
     setTimeout(() => paletteInput.focus(), 30);
   }
   function closePalette() {
+    if (!palette.classList.contains('on')) return;
     palette.inert = true;
     palette.classList.remove('on'); palette.setAttribute('aria-hidden', 'true');
-    if (state.lastFocus && state.lastFocus.focus) state.lastFocus.focus();
+    paletteInput.setAttribute('aria-expanded', 'false');
+    if (!paletteItems.length) paletteInput.removeAttribute('aria-activedescendant');
+    unlockScroll(); modalClosed();
+    if (state.openId) drawer.inert = false;
+    const back = state.paletteReturn; state.paletteReturn = null;
+    requestAnimationFrame(() => { if (back && back.isConnected && back.focus) back.focus(); });
   }
   $('#btnPalette').addEventListener('click', openPalette);
   paletteInput.addEventListener('input', buildPalette);
   paletteInput.addEventListener('keydown', (e) => {
+    if (e.isComposing || e.keyCode === 229) return;
     if (e.key === 'ArrowDown') { e.preventDefault(); paletteSel = Math.min(paletteSel + 1, paletteItems.length - 1); paintPaletteSel(); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); paletteSel = Math.max(paletteSel - 1, 0); paintPaletteSel(); }
     else if (e.key === 'Enter') { e.preventDefault(); const it = paletteItems[paletteSel]; if (it) it.run(); }
@@ -1368,16 +1456,20 @@
     searchTimer = setTimeout(renderCards, 90);
   });
   searchEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { searchEl.value = ''; state.query = ''; renderCards(); searchEl.blur(); }
+    if (e.isComposing || e.keyCode === 229) return;
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      if (searchEl.value || state.query) { searchEl.value = ''; state.query = ''; renderCards(); }
+    }
   });
 
   /* ---------------- 快捷键 ---------------- */
   document.addEventListener('keydown', (e) => {
+    if (e.isComposing || e.keyCode === 229) return;
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || '')) || e.target.isContentEditable;
     if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); openPalette(); return; }
-    if (!typing && e.key === '/') { e.preventDefault(); searchEl.focus(); return; }
-    if (!typing && e.key === 't') { toggleTheme(); }
-    if (!typing && e.key === 'l') { toggleLang(); }
+    if (state.openId || palette.classList.contains('on')) return;
+    if (!typing && e.key === '/') { e.preventDefault(); searchEl.focus(); }
   });
 
   /* ---------------- 滚动进度 + 导航高亮 ---------------- */
@@ -1486,7 +1578,11 @@
     document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else if (ptr.on) start(); });
 
     const mo = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-    if (mo && mo.addEventListener) mo.addEventListener('change', () => { if (!localStorage.getItem('kb-theme')) { setTheme(mo.matches ? 'dark' : 'light', false); draw(16); } });
+    if (mo && mo.addEventListener) mo.addEventListener('change', () => {
+      let stored = null;
+      try { stored = localStorage.getItem('kb-theme'); } catch (e) {}
+      if (!stored) { setTheme(mo.matches ? 'dark' : 'light', false); draw(16); }
+    });
 
     resize();
     window.__heroDots = { recolor: () => draw(16), resize: resize };
@@ -1494,14 +1590,19 @@
 
   /* ---------------- hash 路由 ---------------- */
   function routeFromHash() {
-    const m = /^#\/work\/([a-z0-9\-]+)$/.exec(location.hash || '');
-    if (m && findProject(m[1])) { openProject(m[1], true); return; }
+    if ((location.hash || '').indexOf('#/work/') === 0) {
+      const m = /^#\/work\/([a-z0-9\-]+)$/.exec(location.hash);
+      if (m && findProject(m[1])) { openProject(m[1], true); return; }
+      try { history.replaceState({}, '', location.pathname + location.search); } catch (e) {}
+    }
     if (state.openId) closeDrawer();
   }
   window.addEventListener('hashchange', routeFromHash);
   window.addEventListener('popstate', routeFromHash);
 
   /* ---------------- 启动 ---------------- */
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform || '');
+  const kbd = $('#kbdHint'); if (kbd) kbd.textContent = isMac ? '⌘K' : 'Ctrl K';
   drawer.inert = true;
   palette.inert = true;
   applyLang();
