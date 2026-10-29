@@ -1,0 +1,7 @@
+﻿research/
+verify/shots/
+verify/*.json
+verify/_data.new.js
+verify/diag.cjs
+verify/splice.cjs
+verify/og-src.html

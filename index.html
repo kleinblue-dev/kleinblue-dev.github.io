@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>克莱因蓝 · kleinblue-dev — 做小而完整的东西</title>
+<meta name="description" content="克莱因蓝（kleinblue-dev）的作品集：网页小游戏、离线小工具、可复现的技术笔记。单文件、零依赖、可离线；先定约束，再推设计；结论要能被否证。" />
+<meta name="author" content="kleinblue-dev" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#f5f4f1" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0c0e13" media="(prefers-color-scheme: dark)" />
+<link rel="canonical" href="https://kleinblue-dev.github.io/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="克莱因蓝 · kleinblue-dev — 做小而完整的东西" />
+<meta property="og:description" content="单文件、零依赖、可离线。8 个公开作品：网页小游戏、离线小工具、可复现的技术笔记。" />
+<meta property="og:url" content="https://kleinblue-dev.github.io/" />
+<meta property="og:image" content="https://kleinblue-dev.github.io/og.png" />
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23002FA7'/%3E%3Ccircle cx='32' cy='32' r='12.5' fill='%23f5f4f1'/%3E%3C/svg%3E" />
+<style>
+  /* ============================================================
+     设计令牌
+     克莱因蓝 IKB #002FA7 是唯一强调色；纸白 + 墨黑构成主体，
+     所有颜色对比度 ≥ 4.5:1（正文）/ 3:1（大字与非文本）。
+     ============================================================ */
+  :root{
+    --ikb:#002FA7;
+    --ikb-2:#001E6E;
+    --ikb-wash:rgba(0,47,167,.07);
+    --ikb-line:rgba(0,47,167,.28);
+    --paper:#f5f4f1;
+    --paper-2:#ecebe6;
+    --card:#fffefb;
+    --ink:#12141a;
+    --ink-2:#3b404b;
+    --ink-3:#666c79;
+    --line:rgba(18,20,26,.13);
+    --line-2:rgba(18,20,26,.07);
+    --accent:var(--ikb);
+    --accent-ink:#fff;
+    --bar:rgba(245,244,241,.82);
+    --shadow:0 18px 44px -22px rgba(18,20,26,.32);
+    --mono:ui-monospace,"SFMono-Regular","Cascadia Mono","JetBrains Mono","Consolas",monospace;
+    --sans:"Inter","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+    --serif:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun","Times New Roman",serif;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  html[data-theme="dark"]{
+    --ikb:#7589ff;
+    --ikb-2:#a3b2ff;
+    --ikb-wash:rgba(117,137,255,.10);
+    --ikb-line:rgba(117,137,255,.36);
+    --paper:#0c0e13;
+    --paper-2:#11141b;
+    --card:#141821;
+    --ink:#e8e9f0;
+    --ink-2:#bcc1cf;
+    --ink-3:#8b91a1;
+    --line:rgba(232,233,240,.15);
+    --line-2:rgba(232,233,240,.08);
+    --accent:#7589ff;
+    --accent-ink:#08090d;
+    --bar:rgba(12,14,19,.84);
+    --shadow:0 18px 44px -22px rgba(0,0,0,.8);
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:78px;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.72;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  /* 纸纹：内联 SVG，零网络请求 */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.32;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+    background-size:180px 180px;
+  }
+  html[data-theme="dark"] body::before{opacity:.18;mix-blend-mode:screen;}
+  img,svg,canvas{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;}
+  h1,h2,h3,h4,p,ul,ol,figure{margin:0;}
+  ul,ol{padding:0;list-style:none;}
+  ::selection{background:var(--ikb);color:#fff;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+  .wrap{width:min(1180px,100% - 44px);margin-inline:auto;position:relative;z-index:1;}
+  @media(max-width:640px){.wrap{width:min(1180px,100% - 32px);}}
+
+  .skip{
+    position:fixed;top:10px;left:10px;z-index:200;padding:10px 16px;border-radius:8px;
+    background:var(--ink);color:var(--paper);font-size:13px;transform:translateY(-160%);transition:transform .18s var(--ease);
+  }
+  .skip:focus{transform:translateY(0);}
+
+  /* 阅读进度 */
+  .progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:120;background:transparent;pointer-events:none;}
+  .progress i{display:block;height:100%;width:0;background:var(--ikb);transition:width .1s linear;}
+
+  /* ================= 顶栏 ================= */
+  .topbar{position:sticky;top:0;z-index:100;background:var(--bar);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border-bottom:1px solid var(--line-2);}
+  .topbar-in{display:flex;align-items:center;gap:18px;height:60px;}
+  .brand{display:flex;align-items:center;gap:10px;min-width:0;font-weight:650;letter-spacing:-.01em;}
+  .brand-mark{width:22px;height:22px;border-radius:6px;background:var(--ikb);display:grid;place-items:center;flex:0 0 auto;}
+  .brand-mark i{width:7px;height:7px;border-radius:50%;background:var(--paper);display:block;}
+  .brand b{font-weight:650;}
+  .brand span{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;}
+  .nav-links{display:flex;gap:4px;margin-left:auto;}
+  .nav-links a{padding:8px 12px;border-radius:8px;font-size:14px;color:var(--ink-2);transition:color .15s,background .15s;}
+  .nav-links a:hover{color:var(--ink);background:var(--ikb-wash);}
+  .nav-links a[aria-current="true"]{color:var(--accent);}
+  .tools{display:flex;align-items:center;gap:6px;}
+  .tool-btn{height:34px;min-width:34px;padding:0 9px;border:1px solid var(--line);border-radius:9px;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11.5px;color:var(--ink-2);letter-spacing:.04em;transition:border-color .15s,color .15s,background .15s;}
+  .tool-btn:hover{border-color:var(--ikb-line);color:var(--ink);background:var(--ikb-wash);}
+  .tool-btn kbd{font-family:var(--mono);font-size:10px;padding:1px 4px;border:1px solid var(--line);border-radius:4px;color:var(--ink-3);}
+  @media(max-width:880px){.nav-links{display:none;} .tool-btn kbd{display:none;}}
+
+  /* ================= Hero ================= */
+  .hero{position:relative;padding:clamp(46px,8.5vh,104px) 0 clamp(38px,6vh,74px);border-bottom:1px solid var(--line);overflow:hidden;}
+  .hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+  .hero .wrap{z-index:2;}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.16fr) minmax(0,.84fr);gap:clamp(24px,4vw,64px);align-items:center;}
+  .hero-label{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:22px;}
+  .hero-label i{width:6px;height:6px;border-radius:50%;background:var(--ikb);box-shadow:0 0 0 4px var(--ikb-wash);}
+  h1{font-size:clamp(38px,5.9vw,80px);line-height:1.04;letter-spacing:-.035em;font-weight:680;}
+  h1 em{font-style:normal;color:var(--accent);position:relative;white-space:nowrap;}
+  h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.055em;background:var(--ikb);opacity:.34;border-radius:2px;}
+  .hero-lead{margin-top:22px;max-width:31em;font-size:clamp(15px,1.35vw,17.5px);color:var(--ink-2);line-height:1.78;}
+  .hero-lead b{font-weight:600;color:var(--ink);}
+  .cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;border-radius:10px;font-size:14.5px;font-weight:560;border:1px solid transparent;transition:transform .16s var(--ease),background .16s,border-color .16s,box-shadow .16s;}
+  .btn-primary{background:var(--ikb);color:#fff;box-shadow:0 10px 26px -14px rgba(0,47,167,.85);}
+  .btn-primary:hover{transform:translateY(-1px);background:var(--ikb-2);}
+  .btn-ghost{border-color:var(--line);color:var(--ink-2);background:var(--card);}
+  .btn-ghost:hover{border-color:var(--ikb-line);color:var(--ink);transform:translateY(-1px);}
+  .btn svg{width:15px;height:15px;}
+
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:46px;border-top:1px solid var(--line);}
+  .stat{padding:18px 18px 0 0;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:0;}
+  .stat b{display:block;font-family:var(--mono);font-size:clamp(22px,2.6vw,30px);font-weight:600;letter-spacing:-.02em;line-height:1.1;}
+  .stat span{font-size:12px;color:var(--ink-3);letter-spacing:.02em;}
+
+  /* 右侧：作品索引 / 结构图 */
+  .hero-aside{align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:12px;}
+  .aside-head{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--line);padding-bottom:9px;}
+  .aside-list{display:flex;flex-direction:column;}
+  .aside-item{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line-2);font-size:13.5px;color:var(--ink-2);transition:color .15s,transform .15s var(--ease);}
+  .aside-item:hover{color:var(--ink);transform:translateX(3px);}
+  .aside-item .idx{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);width:18px;flex:0 0 auto;}
+  .aside-item .dot{width:5px;height:5px;border-radius:50%;background:var(--line);flex:0 0 auto;}
+  .aside-item .dot.on{background:var(--ikb);box-shadow:0 0 0 3px var(--ikb-wash);}
+  .aside-item .nm{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .aside-item .kd{font-family:var(--mono);font-size:10px;color:var(--ink-3);flex:0 0 auto;letter-spacing:.04em;}
+  @media(max-width:940px){.hero-grid{grid-template-columns:1fr;} .hero-aside{display:none;}}
+
+  /* ================= 通用 section ================= */
+  .sec{padding:clamp(56px,8vh,96px) 0;border-bottom:1px solid var(--line);position:relative;}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:34px;}
+  .sec-idx{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .sec-idx::before{content:"";width:22px;height:1px;background:var(--ikb);display:block;}
+  .sec h2{font-size:clamp(26px,3.5vw,42px);line-height:1.12;letter-spacing:-.025em;font-weight:660;}
+  .sec-lead{font-size:14.5px;color:var(--ink-3);max-width:34em;margin-top:12px;}
+  .sec-link{font-family:var(--mono);font-size:12px;color:var(--ink-2);border-bottom:1px solid var(--line);padding-bottom:3px;transition:color .15s,border-color .15s;white-space:nowrap;}
+  .sec-link:hover{color:var(--accent);border-color:var(--accent);}
+
+  /* ================= 作品：工具条 ================= */
+  .toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;}
+  .chip{height:32px;padding:0 13px;border-radius:999px;border:1px solid var(--line);font-size:12.5px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;transition:all .15s var(--ease);}
+  .chip:hover{border-color:var(--ikb-line);color:var(--ink);}
+  .chip[aria-pressed="true"]{background:var(--ikb);border-color:var(--ikb);color:#fff;}
+  .chip .n{font-family:var(--mono);font-size:10.5px;opacity:.62;}
+  .search{margin-left:auto;display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);min-width:210px;transition:border-color .15s;}
+  .search:focus-within{border-color:var(--ikb-line);}
+  .search svg{width:14px;height:14px;color:var(--ink-3);flex:0 0 auto;}
+  .search input{border:0;outline:0;background:none;font:inherit;font-size:13.5px;color:var(--ink);width:100%;min-width:0;}
+  .search input::placeholder{color:var(--ink-3);}
+  .search .esc{font-family:var(--mono);font-size:10px;color:var(--ink-3);border:1px solid var(--line);border-radius:4px;padding:1px 4px;}
+  @media(max-width:720px){.search{margin-left:0;width:100%;}}
+
+  /* ================= 作品卡片 ================= */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(310px,100%),1fr));gap:14px;}
+  .card{
+    position:relative;display:flex;flex-direction:column;gap:12px;padding:22px 22px 18px;border:1px solid var(--line);border-radius:14px;
+    background:var(--card);cursor:pointer;overflow:hidden;isolation:isolate;
+    transition:transform .2s var(--ease),border-color .2s,box-shadow .2s;
+  }
+  .card::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;background:var(--ikb);transform:scaleX(0);transform-origin:left;transition:transform .28s var(--ease);}
+  .card:hover,.card:focus-visible{transform:translateY(-3px);border-color:var(--ikb-line);box-shadow:var(--shadow);}
+  .card:hover::after,.card:focus-visible::after{transform:scaleX(1);}
+  .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .card-idx{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.1em;}
+  .kind{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line);border-radius:5px;padding:2px 7px;}
+  .card h3{font-size:20.5px;line-height:1.3;letter-spacing:-.015em;font-weight:640;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .card h3 .live{width:6px;height:6px;border-radius:50%;background:var(--ikb);box-shadow:0 0 0 3px var(--ikb-wash);flex:0 0 auto;}
+  .card p{font-size:13.5px;color:var(--ink-2);line-height:1.68;min-height:3.3em;}
+  .stack{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto;}
+  .stack span{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);background:var(--paper-2);border-radius:4px;padding:2px 6px;}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:12px;border-top:1px solid var(--line-2);font-family:var(--mono);font-size:10.5px;color:var(--ink-3);}
+  .card-foot .go{display:inline-flex;align-items:center;gap:5px;color:var(--ink-2);transition:color .15s,gap .15s;}
+  .card:hover .card-foot .go{color:var(--accent);gap:8px;}
+  .card-more{position:absolute;inset:0;z-index:1;border-radius:14px;}
+  .card:focus-within{transform:translateY(-3px);border-color:var(--ikb-line);box-shadow:var(--shadow);}
+  .card-more:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;}
+  h1 b,h1 em{font-style:normal;font-weight:680;}
+  .card-links{position:relative;z-index:2;display:flex;gap:10px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);}
+  .card-links a{transition:color .15s;}
+  .card-links a:hover{color:var(--accent);}
+  .empty{padding:54px 0;text-align:center;color:var(--ink-3);font-size:14px;}
+  .empty b{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;color:var(--ink-2);}
+
+  /* ================= 时间线 ================= */
+  .tl{position:relative;padding-left:26px;}
+  .tl::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:1px;background:linear-gradient(var(--line),var(--line-2));}
+  .tl-item{position:relative;padding:0 0 26px 22px;}
+  .tl-item::before{content:"";position:absolute;left:-26px;top:8px;width:9px;height:9px;border-radius:50%;background:var(--paper);border:1px solid var(--ikb);box-shadow:0 0 0 3px var(--paper);}
+  .tl-item time{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.08em;}
+  .tl-item h3{font-size:16px;margin-top:4px;font-weight:620;letter-spacing:-.01em;}
+  .tl-item p{font-size:13.5px;color:var(--ink-3);margin-top:3px;max-width:46em;}
+
+  /* ================= 关于 ================= */
+  .about-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,72px);align-items:start;}
+  .about-copy p{font-size:15.5px;color:var(--ink-2);line-height:1.85;margin-bottom:16px;}
+  .about-copy p b{color:var(--ink);font-weight:600;}
+  .principles{display:grid;gap:10px;margin-top:26px;}
+  .principle{display:flex;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:11px;background:var(--card);}
+  .principle .k{font-family:var(--mono);font-size:10.5px;color:var(--accent);letter-spacing:.1em;flex:0 0 26px;padding-top:3px;}
+  .principle h3{font-size:14px;font-weight:620;margin-bottom:2px;}
+  .principle p{font-size:12.8px;color:var(--ink-3);line-height:1.6;}
+  @media(max-width:860px){.about-grid{grid-template-columns:1fr;}}
+
+  /* ================= 联系 ================= */
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+  .contact-card{display:flex;flex-direction:column;gap:6px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--card);transition:border-color .16s,transform .16s var(--ease);}
+  .contact-card:hover{border-color:var(--ikb-line);transform:translateY(-2px);}
+  .contact-card .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
+  .contact-card .val{font-size:15px;font-weight:560;display:flex;align-items:center;gap:7px;}
+  .contact-card .hint{font-size:12px;color:var(--ink-3);}
+  .contact-card svg{width:14px;height:14px;color:var(--ink-3);}
+
+  /* ================= 页脚 ================= */
+  footer{padding:34px 0 42px;}
+  .foot-in{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.02em;}
+  .foot-in .site{display:flex;align-items:center;gap:8px;}
+  .foot-in .site i{width:4px;height:4px;border-radius:50%;background:var(--ikb);display:block;}
+
+  /* ================= 详情抽屉 ================= */
+  .scrim{position:fixed;inset:0;z-index:150;background:rgba(10,12,18,.42);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .28s var(--ease);}
+  .scrim.on{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;z-index:160;width:min(580px,100%);background:var(--paper);
+    border-left:1px solid var(--line);box-shadow:var(--shadow);transform:translateX(101%);
+    transition:transform .34s var(--ease);display:flex;flex-direction:column;overscroll-behavior:contain;
+  }
+  .drawer.on{transform:translateX(0);}
+  .drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:20px 24px 16px;border-bottom:1px solid var(--line);}
+  .drawer-head .meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px;align-items:center;}
+  .drawer-head h2{font-size:23px;letter-spacing:-.02em;margin-top:7px;line-height:1.25;display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+  .icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-2);flex:0 0 auto;transition:background .15s,color .15s,border-color .15s;}
+  .icon-btn:hover{background:var(--ikb-wash);color:var(--ink);border-color:var(--ikb-line);}
+  .icon-btn svg{width:15px;height:15px;}
+  .drawer-body{overflow-y:auto;padding:22px 24px 32px;flex:1 1 auto;overscroll-behavior:contain;}
+  .drawer-body::-webkit-scrollbar{width:8px;}
+  .drawer-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px;}
+  .dblock{margin-bottom:24px;}
+  .dblock h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px;}
+  .dblock p{font-size:14.5px;color:var(--ink-2);line-height:1.78;}
+  .tradeoff{display:grid;gap:8px;}
+  .tradeoff li{display:grid;grid-template-columns:auto 1fr;gap:8px;font-size:13.5px;color:var(--ink-2);line-height:1.65;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:var(--card);}
+  .tradeoff .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--accent);padding-top:3px;white-space:nowrap;}
+  .meta-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .meta-table th,.meta-table td{text-align:left;padding:8px 0;border-bottom:1px solid var(--line-2);vertical-align:top;}
+  .meta-table th{font-weight:400;color:var(--ink-3);font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;white-space:nowrap;padding-right:14px;width:1%;}
+  .meta-table td{color:var(--ink-2);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .btn-sm{height:38px;padding:0 14px;border-radius:9px;font-size:13px;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--card);transition:all .15s;}
+  .btn-sm:hover{border-color:var(--ikb-line);}
+  .btn-sm.solid{background:var(--ikb);color:#fff;border-color:var(--ikb);}
+  .btn-sm.solid:hover{background:var(--ikb-2);}
+  .preview{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper-2);aspect-ratio:16/10;position:relative;display:grid;place-items:center;}
+  .preview iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+  .preview-cta{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px;text-align:center;}
+  .preview-cta span{font-size:12px;color:var(--ink-3);max-width:24em;}
+  .verify-note{border-left:2px solid var(--ikb-line);padding-left:12px;color:var(--ink-2);font-size:13.5px;}
+  .ev-list{display:grid;gap:6px;}
+  .ev-list a{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:var(--card);transition:border-color .15s,color .15s;}
+  .ev-list a:hover{border-color:var(--ikb-line);color:var(--accent);}
+  .ev-list a>span{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);flex:0 0 auto;padding-right:8px;border-right:1px solid var(--line-2);}
+  .ev-list a>em{font-style:normal;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .ev-list svg{flex:0 0 auto;color:var(--ink-3);}
+
+  /* ================= 命令面板 ================= */
+  .palette{position:fixed;inset:0;z-index:200;display:grid;place-items:start center;padding:12vh 16px 16px;opacity:0;pointer-events:none;transition:opacity .18s var(--ease);}
+  .palette.on{opacity:1;pointer-events:auto;}
+  .palette-bg{position:absolute;inset:0;background:rgba(10,12,18,.44);backdrop-filter:blur(3px);}
+  .palette-box{position:relative;width:min(620px,100%);background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px -30px rgba(0,0,0,.5);overflow:hidden;transform:translateY(-8px) scale(.99);transition:transform .2s var(--ease);}
+  .palette.on .palette-box{transform:none;}
+  .palette-input{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);}
+  .palette-input svg{width:16px;height:16px;color:var(--ink-3);flex:0 0 auto;}
+  .palette-input input{border:0;outline:0;background:none;font:inherit;font-size:15px;color:var(--ink);width:100%;}
+  .palette-input kbd{font-family:var(--mono);font-size:10px;color:var(--ink-3);border:1px solid var(--line);border-radius:4px;padding:2px 5px;}
+  .palette-list{max-height:min(54vh,420px);overflow-y:auto;padding:6px;}
+  .pgroup{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:9px 10px 5px;}
+  .pitem{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13.5px;color:var(--ink-2);cursor:pointer;}
+  .pitem .pi{font-family:var(--mono);font-size:11px;color:var(--ink-3);width:16px;flex:0 0 auto;}
+  .pitem .pt{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .pitem .ph{font-family:var(--mono);font-size:10px;color:var(--ink-3);flex:0 0 auto;}
+  .pitem[aria-selected="true"]{background:var(--ikb-wash);color:var(--ink);}
+  .pitem[aria-selected="true"] .pi{color:var(--accent);}
+  .palette-foot{display:flex;gap:14px;padding:9px 14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .palette-foot kbd{border:1px solid var(--line);border-radius:4px;padding:1px 4px;margin-right:4px;}
+
+  /* ================= Toast ================= */
+  .toast{position:fixed;left:50%;bottom:26px;z-index:220;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;padding:9px 16px;border-radius:9px;transition:opacity .2s,transform .2s var(--ease);max-width:calc(100% - 32px);}
+  .toast.on{opacity:1;transform:translate(-50%,0);}
+
+  /* ================= 无 JS 兜底 ================= */
+  .nojs{max-width:680px;margin:0 auto;padding:40px 0;}
+  .nojs h2{font-size:22px;margin-bottom:14px;}
+  .nojs li{padding:10px 0;border-bottom:1px solid var(--line);}
+  .nojs a{color:var(--accent);}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  }
+  @media print{
+    .topbar,.progress,.hero-canvas,.toolbar,.drawer,.scrim,.palette,.toast,.card-more{display:none !important;}
+    body{background:#fff;}
+    .card{break-inside:avoid;border-color:#ddd;}
+  }
+</style>
+<script>
+  /* 首屏防闪烁：在样式表之后、body 之前确定主题与语言（无网络、无依赖） */
+  (function(){
+    try{
+      var t = localStorage.getItem('kb-theme');
+      if(!t || (t!=='light' && t!=='dark')) t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+      var l = localStorage.getItem('kb-lang');
+      if(l!=='zh' && l!=='en') l = 'zh';
+      document.documentElement.setAttribute('lang', l==='zh' ? 'zh-CN' : 'en');
+      document.documentElement.setAttribute('data-lang', l);
+    }catch(e){
+      document.documentElement.setAttribute('data-theme','light');
+      document.documentElement.setAttribute('data-lang','zh');
+    }
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#work" data-i18n="skip">跳到作品</a>
+<div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#top" aria-label="kleinblue-dev 首页">
+      <span class="brand-mark" aria-hidden="true"><i></i></span>
+      <b>克莱因蓝</b>
+      <span>kleinblue-dev</span>
+    </a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="#work" data-nav="work" data-i18n="nav.work">作品</a>
+      <a href="#timeline" data-nav="timeline" data-i18n="nav.timeline">时间线</a>
+      <a href="#about" data-nav="about" data-i18n="nav.about">做法</a>
+      <a href="#contact" data-nav="contact" data-i18n="nav.contact">联系</a>
+    </nav>
+    <div class="tools">
+      <button class="tool-btn" id="btnPalette" type="button" aria-label="打开命令面板">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span data-i18n="tool.search">搜索</span><kbd>⌘K</kbd>
+      </button>
+      <button class="tool-btn" id="btnTheme" type="button" aria-label="切换主题" title="切换主题">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg>
+      </button>
+      <button class="tool-btn" id="btnLang" type="button" aria-label="切换语言" title="Switch language">中 / EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-label"><i aria-hidden="true"></i><span data-i18n="hero.label">独立开发者 · 2026</span></div>
+          <h1 id="heroTitle" data-i18n-html="hero.title">我做<em>小而完整</em>的东西。</h1>
+          <p class="hero-lead" data-i18n-html="hero.lead">网页小游戏、离线小工具、可复现的技术笔记。<b>单文件、零依赖、可离线</b>；先定约束，再推设计；结论要能被否证。</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#work">
+              <span data-i18n="hero.cta.work">看作品</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+            </a>
+            <button class="btn btn-ghost" id="btnContact" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              <span data-i18n="hero.cta.contact">复制邮箱</span>
+            </button>
+          </div>
+          <div class="stats">
+            <div class="stat"><b>08</b><span data-i18n="stat.repos">公开作品</span></div>
+            <div class="stat"><b>03</b><span data-i18n="stat.live">在线可玩</span></div>
+            <div class="stat"><b>0</b><span data-i18n="stat.requests">本站外部请求</span></div>
+          </div>
+        </div>
+        <aside class="hero-aside" aria-label="作品索引">
+          <div class="aside-head"><span data-i18n="aside.title">作品索引</span><span data-i18n="aside.count">8 / 8</span></div>
+          <div class="aside-list" id="heroAside"></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 作品 ============ -->
+  <section class="sec" id="work" aria-labelledby="workTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="sec-idx"><span>01</span><span data-i18n="work.idx">作品</span></div>
+          <h2 id="workTitle" data-i18n="work.title">八个东西，都能点开</h2>
+          <p class="sec-lead" data-i18n="work.lead">在线可玩的直接进；只放源码的给出根因、证据和适用边界。</p>
+        </div>
+        <a class="sec-link" href="https://github.com/kleinblue-dev" target="_blank" rel="noopener noreferrer">github.com/kleinblue-dev ↗</a>
+      </div>
+
+      <div class="toolbar" role="group" aria-label="筛选作品">
+        <div class="chips" id="chips"></div>
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="searchInput" type="search" data-i18n-ph="work.search" placeholder="搜索作品 / 技术栈" autocomplete="off" aria-label="搜索作品" />
+          <span class="esc" aria-hidden="true">/</span>
+        </label>
+      </div>
+
+      <p class="sr" id="resultCount" aria-live="polite"></p>
+      <div class="grid" id="cards"></div>
+      <div class="empty" id="empty" hidden>
+        <b data-i18n="work.empty.title">没有匹配</b>
+        <span data-i18n="work.empty.desc">换个关键词，或按 ⌘K 全局搜索。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 时间线 ============ -->
+  <section class="sec" id="timeline" aria-labelledby="tlTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="sec-idx"><span>02</span><span data-i18n="tl.idx">时间线</span></div>
+          <h2 id="tlTitle" data-i18n="tl.title">最近三个月做了什么</h2>
+        </div>
+      </div>
+      <ol class="tl" id="timeline"></ol>
+    </div>
+  </section>
+
+  <!-- ============ 做法 ============ -->
+  <section class="sec" id="about" aria-labelledby="aboutTitle">
+    <div class="wrap">
+      <div class="about-grid">
+        <div>
+          <div class="sec-idx"><span>03</span><span data-i18n="about.idx">做法</span></div>
+          <h2 id="aboutTitle" data-i18n-html="about.title">先写约束，<br>再推设计。</h2>
+        </div>
+        <div class="about-copy">
+          <p data-i18n-html="about.p1">我做的东西有一个共同点：<b>能在一个文件里跑完，且不依赖任何服务器</b>。游戏、练习原型、小工具都这样——分发成本为零，用户点开即用，数据留在自己的浏览器里。</p>
+          <p data-i18n-html="about.p2">技术上我偏好<b>可验证</b>：能写的数字就写数字，写不了就标「未验证」。研究类作品会给否证条件和边界，而不是给结论。</p>
+          <div class="principles" id="principles"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 联系 ============ -->
+  <section class="sec" id="contact" aria-labelledby="contactTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="sec-idx"><span>04</span><span data-i18n="contact.idx">联系</span></div>
+          <h2 id="contactTitle" data-i18n="contact.title">想聊就直说</h2>
+          <p class="sec-lead" data-i18n="contact.lead">合作、提问、指出错误都行。GitHub 上提 Issue 最快。</p>
+        </div>
+      </div>
+      <div class="contact-grid" id="contactGrid"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span class="site"><i aria-hidden="true"></i><span data-i18n="foot.note">本站零外部请求 · 无追踪 · 单文件</span></span>
+    <span id="footMeta">© 2026 kleinblue-dev</span>
+  </div>
+</footer>
+
+<!-- 详情抽屉 -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <div class="meta" id="drawerMeta"></div>
+      <h2 id="drawerTitle"></h2>
+    </div>
+    <button class="icon-btn" id="drawerClose" type="button" aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<!-- 命令面板 -->
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="命令面板" aria-hidden="true">
+  <div class="palette-bg" data-close-palette></div>
+  <div class="palette-box">
+    <div class="palette-input">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="paletteInput" type="text" role="combobox" aria-expanded="true" aria-controls="paletteList" aria-autocomplete="list" aria-label="命令面板搜索" data-i18n-aria="palette.aria" data-i18n-ph="palette.ph" placeholder="搜索作品、跳转、切换主题…" autocomplete="off" spellcheck="false" />
+      <kbd>ESC</kbd>
+    </div>
+    <div class="palette-list" id="paletteList" role="listbox" aria-label="命令列表"></div>
+    <div class="palette-foot">
+      <span><kbd>↑↓</kbd><span data-i18n="palette.nav">选择</span></span>
+      <span><kbd>↵</kbd><span data-i18n="palette.run">执行</span></span>
+      <span><kbd>esc</kbd><span data-i18n="palette.close">关闭</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<noscript>
+  <div class="wrap nojs">
+    <h2>作品清单（无 JavaScript 版本）</h2>
+    <ul>
+      <li><a href="https://kleinblue-dev.github.io/mojian/">墨间 mojian</a> — 八步水墨自我陪伴练习，单文件、离线</li>
+      <li><a href="https://kleinblue-dev.github.io/chaitai/">拆台 chaitai</a> — 单文件 HTML5 Canvas 横版动作游戏</li>
+      <li><a href="https://kleinblue-dev.github.io/ink-mind/">墨心 ink-mind</a> — 三张纸的水墨小游戏</li>
+      <li><a href="https://github.com/kleinblue-dev/open-llm-vtuber-ws-drain-fix">open-llm-vtuber 空会话根因修复</a> — 14 行补丁 + 复现脚本</li>
+      <li><a href="https://github.com/kleinblue-dev/minimax-h3-low-vram-notes">MiniMax H3 低显存笔记</a> — 6–8GB 路线对照与速度锚点</li>
+      <li><a href="https://github.com/kleinblue-dev/pet-memorial-pipeline">宠物纪念视频管线</a> — 修复 → 活化 → 升清 → 合成，全本地</li>
+      <li><a href="https://github.com/kleinblue-dev/quant-project">量化项目</a> — A 股数据管道 + 回测引擎 + 7 次否证</li>
+      <li><a href="https://github.com/kleinblue-dev/cmover">cmover</a> — 把大文件夹搬到别的盘，留目录联接</li>
+    </ul>
+  </div>
+</noscript>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============================================================
+     配置：改这里就能更新站点
+     - email 留空 → 全站自动降级为「GitHub 联系」，不出现空邮箱
+     - 每个作品改 1 个对象即可；改完刷新页面
+     ============================================================ */
+  const CONFIG = {
+    email: '',                                  // 例如 'you@example.com'；留空则隐藏邮箱入口
+    github: 'https://github.com/kleinblue-dev',
+    repo: 'https://github.com/kleinblue-dev/kleinblue-dev.github.io',
+    issue: 'https://github.com/kleinblue-dev/kleinblue-dev.github.io/issues/new',
+    verifiedAt: '2026-10-29',
+    year: '2026'
+  };
+
+  const KIND = {
+    web:      { zh: '网页', en: 'web' },
+    tool:     { zh: '工具', en: 'tool' },
+    research: { zh: '研究', en: 'research' },
+    fix:      { zh: '修复', en: 'fix' }
+  };
+
+  /* DATA:START — 作品数据；改这里就能更新站点 */
+  const DATA = [
+    {
+      id: 'mojian', kind: 'web', updated: '2026-10-20',
+      title: { zh: '墨间', en: 'Mojian · Ink Room' },
+      tagline: {
+        zh: '八步水墨自我陪伴练习：单文件、离线、作答不出浏览器。',
+        en: 'An eight-step ink-wash self-companionship exercise: one file, offline, answers never leave the browser.'
+      },
+      what: {
+        zh: '约 8 分钟的交互练习，八步闭环：知情 → 前测 → 择境 → 六轮墨语 → 落墨 → 后测 → 结果 → 收卷。浏览器打开即用，不需要注册、不联网；引导语是本地预置文本，不是实时 AI，也不构成医疗建议。',
+        en: 'An ~8-minute exercise in eight steps: disclosure, pre-test, scene, six rounds of ink dialogue, painting, post-test, result, closing. Open it in a browser, no signup and no network. Prompts are local text, not live AI; this is a self-companionship exercise, not medical advice.'
+      },
+      fp: [
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '练习要能离线做完，且不该上传任何作答。', en: 'The exercise must finish offline and never upload an answer.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '单文件内联全部 CSS/JS，作答只写 localStorage，全页零网络请求。', en: 'One file with inline CSS/JS; answers go to localStorage; zero network requests.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '不设账号体系，也不该留下可被追踪的痕迹。', en: 'No accounts, and no trace that could be tracked.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '进度存本机，清空即消失；页面带 noindex 与 robots 禁抓。', en: 'Progress stays local and clears with a click; the page ships noindex and a robots block.' } }
+      ],
+      stack: ['单文件 HTML', '内联 CSS/JS', 'localStorage'],
+      live: 'https://kleinblue-dev.github.io/mojian/',
+      source: 'https://github.com/kleinblue-dev/mojian',
+      language: 'HTML', license: '未声明',
+      verify: {
+        zh: '本站实测（2026-10-29）：demo 返回 200、91,292 B；页面无外链脚本、无 fetch，README 自称「91 KB」与实测吻合。',
+        en: 'Checked on 2026-10-29: demo returns 200 and 91,292 B; no external scripts, no fetch. The README’s “91 KB” matches the measured size.'
+      },
+      ev: [
+        { k: 'demo', url: 'https://kleinblue-dev.github.io/mojian/' },
+        { k: 'docs', name: '3 份分析文档', url: 'https://github.com/kleinblue-dev/mojian/tree/main/docs' }
+      ]
+    },
+    {
+      id: 'chaitai', kind: 'web', updated: '2026-10-18',
+      title: { zh: '拆台', en: 'Chaitai' },
+      tagline: {
+        zh: 'Canvas 横版动作游戏：零第三方代码与素材，画面音效现场生成。',
+        en: 'A Canvas action platformer with zero third-party code or assets: art and audio generated on the fly.'
+      },
+      what: {
+        zh: '序章 + 五幕 + Boss + 四种结局，另有一个会依据玩家真实行为改口的旁白。双击 index.html 即玩，触屏设备自动出屏幕按钮。入口是 index.html + game.js + 3 个资源脚本——不是单文件；画面与音效由代码程序化生成，没有图片或音频素材包。',
+        en: 'Prologue, five acts, a boss and four endings, plus a narrator that changes its lines based on what you actually did. Open index.html and play; touch devices get on-screen controls. The entry is index.html + game.js + three asset scripts — not a single file; visuals and audio are generated procedurally, with no image or audio packs.'
+      },
+      fp: [
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '不能依赖第三方库，也不能有素材包要下载。', en: 'No third-party libraries and no asset packs to download.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '画面、音效、敌人行为全部由 game.js 程序化生成。', en: 'Visuals, audio and enemy behaviour are all generated by game.js.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '改一版游戏就可能坏掉，必须能反复验收。', en: 'One change can break the game, so it must be re-verifiable.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '仓库带 82 个开发期测试/诊断脚本，改完先跑再发布。', en: 'The repo carries 82 dev-time test/diagnostic scripts; run them before shipping.' } }
+      ],
+      stack: ['HTML5 Canvas', 'JavaScript', '程序化画面/音效', 'puppeteer-core'],
+      live: 'https://kleinblue-dev.github.io/chaitai/',
+      source: 'https://github.com/kleinblue-dev/chaitai',
+      language: 'JavaScript', license: 'MIT',
+      verify: {
+        zh: '本站实测：demo 200；入口依赖的 4 个资源（game.js 171,325 B 等）均 200。README 开头「单文件」的表述与实际结构不符，本站按实际结构写。',
+        en: 'Checked: demo 200; all four assets it loads (game.js 171,325 B among them) return 200. The README’s opening “single file” claim does not match the actual structure; this site describes the real one.'
+      },
+      ev: [
+        { k: 'demo', url: 'https://kleinblue-dev.github.io/chaitai/' },
+        { k: 'file', name: 'BASELINE.md', url: 'https://github.com/kleinblue-dev/chaitai/blob/main/BASELINE.md' }
+      ]
+    },
+    {
+      id: 'ink-mind', kind: 'web', updated: '2026-10-11',
+      title: { zh: '墨心', en: 'Ink Mind' },
+      tagline: {
+        zh: '三张纸的水墨小游戏，玩完给你一张原始信号卡。',
+        en: 'A three-paper ink mini game that hands you a raw signal card at the end.'
+      },
+      what: {
+        zh: '单文件水墨小游戏：三张纸，随便落墨，结束时输出一张「原始信号卡」。浏览器直接打开，手机也能玩；全部计算在本地。仓库只放可运行的那一个 index.html，源码里带检索指纹，搬到非授权地址会显示提示而不是游戏本体。',
+        en: 'A single-file ink mini game: three sheets, paint freely, and it ends with a raw signal card. Opens straight in a browser and works on phones; all computation is local. The repo holds only the runnable index.html, which carries a searchable fingerprint and shows a notice — not the game — when opened from an unauthorised address.'
+      },
+      fp: [
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '结果只属于玩的人，不能上传任何数据。', en: 'Results belong to the player, nothing may be uploaded.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '全部计算在本地，页面不发外部请求（favicon 也用 data URI）。', en: 'Everything computes locally; no external requests, with the favicon inlined as a data URI.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '分发只允许一个文件。', en: 'Distribution must be exactly one file.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: 'index.html 内联全部内容，仓库里没有第二个运行时文件。', en: 'All content is inlined into index.html; no second runtime file exists in the repo.' } }
+      ],
+      stack: ['单文件 HTML', '零外部请求', '离线可玩'],
+      live: 'https://kleinblue-dev.github.io/ink-mind/',
+      source: 'https://github.com/kleinblue-dev/ink-mind',
+      language: 'HTML', license: '保留所有权利',
+      verify: {
+        zh: '本站实测：demo 200、381,208 B；无外部 script/link，无 fetch；源码指纹 MXFP-INKMIND-… 可在页面源码中检索到。',
+        en: 'Checked: demo 200, 381,208 B; no external script/link tags and no fetch; the source fingerprint MXFP-INKMIND-… is present in the page source.'
+      },
+      ev: [
+        { k: 'demo', url: 'https://kleinblue-dev.github.io/ink-mind/' },
+        { k: 'file', name: 'README', url: 'https://github.com/kleinblue-dev/ink-mind' }
+      ]
+    },
+    {
+      id: 'open-llm-vtuber-ws-drain-fix', kind: 'fix', updated: '2026-10-10',
+      title: { zh: '空会话竞态修复', en: 'Empty-conversation race fix' },
+      tagline: {
+        zh: '定位「Conversation error: 」空消息的根因：并发 send 踩到 websockets 断言；14 行锁补丁。',
+        en: 'Root-caused the empty “Conversation error:”: concurrent sends tripping a websockets assert. Fix: a 14-line lock.'
+      },
+      what: {
+        zh: '对 Open-LLM-VTuber 偶发的空消息报错做根因分析：TTS 发送任务与对话任务在同一条 WebSocket 上并发 send，触发 websockets legacy 的 assert waiter is None or waiter.cancelled()。修法是用一把每连接 asyncio.Lock 把 send_text 串行化，附可直接 git apply 的补丁与一个不依赖前端的检测/复现脚本。',
+        en: 'Root-cause analysis for Open-LLM-VTuber’s intermittent empty Conversation error: the TTS sender and the conversation task call send on the same WebSocket concurrently and trip websockets’ legacy assert waiter is None or waiter.cancelled(). The fix serialises each connection’s send_text behind one asyncio.Lock, shipped as a git-appliable patch plus a standalone check/repro client.'
+      },
+      fp: [
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '上游不能大改，补丁要能直接贴回去。', en: 'No large upstream rewrite; the patch must drop straight in.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '只动一个函数，+14 行，git apply 即可；不改调用方。', en: 'Touch one function, +14 lines, git apply; no caller changes.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '必须能证明「确实修好了」，而不是看起来修好了。', en: 'Must prove the fix, not just look like one.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '附独立检测脚本：不依赖前端即可复现空帧并验证修复。', en: 'Ship a standalone check that reproduces the empty frame and verifies the fix without the frontend.' } }
+      ],
+      stack: ['Python', 'asyncio.Lock', 'websockets legacy', 'uvicorn'],
+      live: '',
+      source: 'https://github.com/kleinblue-dev/open-llm-vtuber-ws-drain-fix',
+      language: 'Python', license: 'MIT',
+      verify: {
+        zh: '本站实测：补丁 hunk 为 @@ -211,6 +211,20 @@，新增正好 14 行，与 README「+14 行」一致。修复前后的对照表是作者单机实测，本站未复跑（需要可用的上游服务端）。',
+        en: 'Checked: the patch hunk is @@ -211,6 +211,20 @@, exactly 14 added lines, matching the README. The before/after table is the author’s own run; this site did not re-run it (needs a live upstream server).'
+      },
+      ev: [
+        { k: 'patch', name: '+14 行', url: 'https://github.com/kleinblue-dev/open-llm-vtuber-ws-drain-fix/blob/main/fix/websocket_handler.drain-fix.patch' },
+        { k: 'repro', name: 'ws_drain_race_check.py', url: 'https://github.com/kleinblue-dev/open-llm-vtuber-ws-drain-fix/blob/main/repro/ws_drain_race_check.py' }
+      ]
+    },
+    {
+      id: 'quant-project', kind: 'research', updated: '2026-09-30',
+      title: { zh: '量化研究方法', en: 'Quant Research' },
+      tagline: {
+        zh: '7 次否证的量化研究：事前登记、严格无前视、可复现自检。',
+        en: 'Quant research built to falsify: seven falsifications, pre-registration, strict no-lookahead.'
+      },
+      what: {
+        zh: '先建一套能判定想法真假的可复现流程（份额模型回测引擎、严格无前视、事前登记），再用它检验 6 个流行策略与 1 条「用 LLM 挖因子」的方法论路径。附 12 份报告、6 张数据表、91 项自检脚本，以及一个零依赖、断网可开的 3 分钟单页看板。',
+        en: 'First build a reproducible pipeline that can judge an idea true or false (share-based backtest engine, strict no-lookahead, pre-registered hypotheses); then use it to test six popular strategies plus one methodology path — LLM-generated factors. Ships 12 reports, six data tables, 91 self-check items and a zero-dependency one-page overview.'
+      },
+      fp: [
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '任何结论都必须能被数据否掉。', en: 'Every claim must be falsifiable by data.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '先写事前登记与否证条件再跑回测；被否掉的假设照样留档。', en: 'Pre-register the falsification condition before backtesting; keep refuted hypotheses on record.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '回测最容易出的错是前视偏差，而它不会自己报错。', en: 'The likeliest error in backtesting is lookahead, and it never raises.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '把无前视写进引擎，CI 跑单元测试；真数据自检另立一套，不复用同一份代码。', en: 'Bake no-lookahead into the engine, unit-test it in CI, and keep real-data checks as a separate suite.' } }
+      ],
+      stack: ['Python', 'pandas', 'numpy', 'pytest', 'SQLite', 'GitHub Actions'],
+      live: '',
+      source: 'https://github.com/kleinblue-dev/quant-project',
+      language: 'Python', license: '仅授权阅读',
+      verify: {
+        zh: '本站实测：GitHub Actions 2 次运行均 success（09-28、09-30）；解压实测 scripts/ + strategies/ 共 28 个 .py、5,622 行（README 称 5,620）；12 份报告与 2 份事前登记对得上。91 项自检与 7 次否证的结论本站未复跑（真数据库不进版本库）。',
+        en: 'Checked: two GitHub Actions runs, both successful (09-28, 09-30); unzipped, scripts/ + strategies/ hold 28 .py files and 5,622 lines (README says 5,620); 12 reports and 2 pre-registrations line up. The 91 self-checks and seven falsifications were not re-run here (the real databases are not in the repo).'
+      },
+      ev: [
+        { k: 'demo', name: '3 分钟看板（demo/index.html）', url: 'https://github.com/kleinblue-dev/quant-project/blob/main/demo/index.html' },
+        { k: 'report', name: '12 份', url: 'https://github.com/kleinblue-dev/quant-project/tree/main/reports' }
+      ]
+    },
+    {
+      id: 'cmover', kind: 'tool', updated: '2026-09-28',
+      title: { zh: 'cmover', en: 'cmover' },
+      tagline: {
+        zh: '把 C 盘大文件夹搬到 D 盘，原地留目录联接：逐文件校验通过才动原目录。',
+        en: 'Moves big C: folders to D: and leaves a junction behind — the original is touched only after every file verifies.'
+      },
+      what: {
+        zh: '纯离线的 Windows 小工具。搬运顺序是「复制 → 逐文件校验 → 全通过才把原目录改名备份 → 建联接 → 验证联接 → 删备份」，任一步失败 C 盘一个字节不动，并支持 --undo 撤销。单 exe，用系统自带 csc 编译，零第三方依赖。',
+        en: 'An offline Windows utility. The order is: copy, verify every file, rename the original to a backup only if all checks pass, create the junction, verify it, then delete the backup. A failed step leaves C: untouched, and --undo rolls back. One exe, built with the bundled csc, no third-party dependencies.'
+      },
+      fp: [
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '不能在用户机器上装运行时或第三方库。', en: 'No runtime or third-party libraries on the user’s machine.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: 'C# + 系统自带 csc 现场编译，产物只有一个 exe。', en: 'C# compiled with the built-in csc; the artifact is a single exe.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '搬文件最怕「搬一半坏了、原目录也没了」。', en: 'The real risk: a half-moved folder and a missing original.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '先复制并逐文件校验，全通过才动原目录；失败即回滚。', en: 'Copy and verify file by file first; only then touch the original, and roll back on failure.' } }
+      ],
+      stack: ['C#', 'WinForms', '系统自带 csc', '.NET Framework 4.x'],
+      live: '',
+      source: 'https://github.com/kleinblue-dev/cmover',
+      language: 'C#', license: 'MIT',
+      verify: {
+        zh: '本站实测：6 个 .cs 共 2,510 行，test/run-test.ps1 471 行。README 称 92 项检查全绿，本站未执行该脚本（它会编译 exe 并在临时目录做搬运/撤销演练）。',
+        en: 'Checked: six .cs files total 2,510 lines; test/run-test.ps1 is 471 lines. The README’s “92 checks all green” was not re-run here (the script compiles the exe and rehearses a move/undo in a temp directory).'
+      },
+      ev: [
+        { k: 'tests', name: 'run-test.ps1', url: 'https://github.com/kleinblue-dev/cmover/blob/main/test/run-test.ps1' },
+        { k: 'file', name: '使用说明.txt', url: 'https://github.com/kleinblue-dev/cmover/blob/main/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.txt' }
+      ]
+    },
+    {
+      id: 'pet-memorial-pipeline', kind: 'tool', updated: '2026-10-07',
+      title: { zh: '宠物纪念管线', en: 'Pet Memorial Pipeline' },
+      tagline: {
+        zh: '从宠物照片到 1080p 纪念短片的五阶段本地管线。',
+        en: 'A five-stage local pipeline from pet photos to a 1080p memorial short.'
+      },
+      what: {
+        zh: '15–30 张宠物照片做成 1.5–3 分钟 1080p 短片：修复（Real-ESRGAN）→ 活化（Wan2.1-VACE-1.3B，走 ComfyUI API）→ 升清插帧慢放（Real-CUGAN）→ ffmpeg 总装 → 交付包。仓库只放 tools/ 与 docs/，数据目录按需生成。',
+        en: 'Turns 15–30 pet photos into a 1.5–3 minute 1080p short: restore with Real-ESRGAN, animate with Wan2.1-VACE-1.3B through the ComfyUI API, upscale/interpolate/slow-mo with Real-CUGAN, assemble with ffmpeg, then bundle. The repo ships only tools/ and docs/; data folders are generated on demand.'
+      },
+      fp: [
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '素材是旧照片，清晰度参差，且不能上传云端。', en: 'Old photos of uneven quality, which cannot go to a cloud service.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '五个阶段全本地，每段可单独重跑，坏在哪步只重跑那步。', en: 'Five fully local stages, each re-runnable alone; redo only the failed one.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '单卡只有 6GB 显存。', en: 'Only 6 GB of VRAM on one card.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '分阶段串行跑，避免修复、活化、升清同时压在显存里。', en: 'Run stages serially so restore, animate and upscale never share VRAM at once.' } }
+      ],
+      stack: ['Python', 'ComfyUI API', 'Wan2.1-VACE-1.3B', 'Real-ESRGAN', 'Real-CUGAN', 'ffmpeg'],
+      live: '',
+      source: 'https://github.com/kleinblue-dev/pet-memorial-pipeline',
+      language: 'Python', license: 'MIT',
+      verify: {
+        zh: '本站实测：B 站样片 BV16bHy6mEqn 可达（200），docs/measured-2026-10-07.md 可达。单张约 11.7 分钟、13 张出 96.9 秒样片等数字为 README 原文，本站未复跑管线（需 ComfyUI + 模型 + GPU）。',
+        en: 'Checked: the Bilibili sample BV16bHy6mEqn (200) and docs/measured-2026-10-07.md are reachable. Figures such as ~11.7 min per photo and a 96.9 s cut from 13 photos are README text, not re-run here (needs ComfyUI, models and a GPU).'
+      },
+      ev: [
+        { k: 'video', name: '96.9 秒 / 13 张', url: 'https://www.bilibili.com/video/BV16bHy6mEqn' },
+        { k: 'report', name: 'measured-2026-10-07.md', url: 'https://github.com/kleinblue-dev/pet-memorial-pipeline/blob/main/docs/measured-2026-10-07.md' }
+      ]
+    },
+    {
+      id: 'minimax-h3-low-vram-notes', kind: 'research', updated: '2026-10-10',
+      title: { zh: 'MiniMax H3 低显存笔记', en: 'MiniMax H3 low-VRAM notes' },
+      tagline: {
+        zh: '6–8GB 显存跑 MiniMax H3：三条路线对照，结论是 6GB 只有 WanGP 480p 一条路。',
+        en: 'Running MiniMax H3 on 6–8 GB VRAM: three routes compared — on 6 GB only WanGP at 480p is viable.'
+      },
+      what: {
+        zh: '回答「6–8GB 显存的笔记本能不能本地跑 MiniMax H3」：官方 SGLang、WanGP、FreeVideo 三条路线的最低显存与可出档位并列对照，附 HF 权重逐项体积、社区速度锚点、许可要点与下载清单。结论写得很收敛：6GB 只有 WanGP 480p 一条路，作者最终选择「不装、存档」。',
+        en: 'Answers whether a 6–8 GB-VRAM laptop can run MiniMax H3 locally: SGLang, WanGP and FreeVideo compared side by side with minimum VRAM and achievable resolution, plus per-file weight sizes from HF, community speed anchors, licence points and a download list. The verdict is restrained: on 6 GB there is exactly one route (WanGP at 480p), and the author archived the research instead of installing.'
+      },
+      fp: [
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '硬件只有 6GB 显存，官方权重总量约 498GB。', en: 'Only 6 GB of VRAM against roughly 498 GB of official weights.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '先列路线与最低显存门槛，而不是先下权重。', en: 'Compare routes and minimum VRAM first instead of downloading weights.' } },
+        { k: { zh: '约束', en: 'Constraint' }, v: { zh: '笔记的结论要能被别人复核，否则不如不写。', en: 'Conclusions must be checkable by others, or the note is pointless.' } },
+        { k: { zh: '决策', en: 'Decision' }, v: { zh: '每个数字标来源与核验日期；估算的明确写「未实跑」，并给出「不装」这个选项。', en: 'Tag every number with its source and date; mark estimates as not run; keep “do not install” as a valid outcome.' } }
+      ],
+      stack: ['Markdown', '本地部署调研', '量化/显存分析'],
+      live: '',
+      source: 'https://github.com/kleinblue-dev/minimax-h3-low-vram-notes',
+      language: '', license: 'MIT',
+      verify: {
+        zh: '本站核到：仓库只有 README + LICENSE，没有可运行物；权重体积、速度锚点均为 README 原文摘录，本站未独立复核（原文自标部分为「估算，未实跑」）。',
+        en: 'Checked: the repo holds only README + LICENSE, nothing runnable; weight sizes and speed anchors are README text, not independently verified here (some are marked in the text as estimates).'
+      },
+      ev: [
+        { k: 'readme', name: 'README', url: 'https://github.com/kleinblue-dev/minimax-h3-low-vram-notes/blob/main/README.md' }
+      ]
+    }
+  ];
+  /* DATA:END */
+
+  const I18N = {
+    zh: {
+      'skip': '跳到作品',
+      'nav.work': '作品', 'nav.timeline': '时间线', 'nav.about': '做法', 'nav.contact': '联系',
+      'tool.search': '搜索',
+      'hero.label': '独立开发者 · 2026',
+      'hero.title': '我做<em>小而完整</em>的东西。',
+      'hero.lead': '网页小游戏、离线小工具、可复现的技术笔记。<b>单文件、零依赖、可离线</b>；先定约束，再推设计；结论要能被否证。',
+      'hero.cta.work': '看作品',
+      'hero.cta.contact': '复制邮箱',
+      'hero.cta.contactAlt': '联系我',
+      'stat.repos': '公开作品', 'stat.live': '在线可玩', 'stat.requests': '本站外部请求',
+      'aside.title': '作品索引', 'aside.count': '8 / 8',
+      'work.idx': '作品', 'work.title': '八个东西，都能点开',
+      'work.lead': '在线可玩的直接进；只放源码的给出根因、证据和适用边界。每个作品都标了「本站核验」：哪些是实测，哪些只是仓库自述。',
+      'work.search': '搜索作品 / 技术栈',
+      'work.empty.title': '没有匹配', 'work.empty.desc': '换个关键词，或按 ⌘K 全局搜索。',
+      'work.count': '共 {n} 个作品',
+      'chips.all': '全部',
+      'kind.web': '网页', 'kind.tool': '工具', 'kind.research': '研究', 'kind.fix': '修复',
+      'tl.idx': '时间线', 'tl.title': '最近三个月做了什么',
+      'about.idx': '做法', 'about.title': '先写约束，<br>再推设计。',
+      'about.p1': '我做的东西有一个共同点：<b>能在一个文件里跑完，且不依赖任何服务器</b>。游戏、练习原型、小工具都这样——分发成本为零，用户点开即用，数据留在自己的浏览器里。',
+      'about.p2': '技术上我偏好<b>可验证</b>：能写的数字就写数字，写不了就标「未验证」。研究类作品会给否证条件和边界，而不是给结论。',
+      'contact.idx': '联系', 'contact.title': '想聊就直说',
+      'contact.lead': '合作、提问、指出错误都行。GitHub 上提 Issue 最快。',
+      'contact.github': 'GitHub 主页', 'contact.github.hint': '8 个公开仓库',
+      'contact.issue': '提 Issue', 'contact.issue.hint': '指出错误或提需求',
+      'contact.email': '邮箱', 'contact.email.hint': '点击复制',
+      'contact.repo': '本站源码', 'contact.repo.hint': '单文件，可直接改',
+      'foot.note': '本站零外部请求 · 无追踪 · 单文件',
+      'drawer.what': '是什么', 'drawer.tradeoff': '约束 → 决策', 'drawer.stack': '技术栈',
+      'drawer.preview': '在线预览', 'drawer.meta': '元信息', 'drawer.links': '链接',
+      'drawer.previewLoad': '加载在线预览', 'drawer.previewHint': '点击后才请求 github.io，避免首屏加载。',
+      'drawer.copy': '复制链接', 'drawer.open': '打开作品', 'drawer.source': '看源码',
+      'drawer.verify': '本站核验', 'drawer.evidence': '证据', 'meta.license': '许可',
+      'ev.demo': '在线 demo', 'ev.docs': '文档', 'ev.file': '文件', 'ev.patch': '补丁', 'ev.repro': '复现',
+      'ev.report': '报告', 'ev.tests': '测试', 'ev.video': '样片', 'ev.readme': '笔记',
+      'meta.live': '在线', 'meta.source': '仅源码', 'meta.updated': '最近更新',
+      'meta.language': '语言', 'meta.kind': '类型', 'meta.status': '状态', 'meta.repo': '仓库',
+      'meta.none': '未记录',
+      'palette.ph': '搜索作品、跳转、切换主题…',
+      'palette.nav': '选择', 'palette.run': '执行', 'palette.close': '关闭',
+      'palette.projects': '作品', 'palette.jump': '跳转', 'palette.actions': '操作',
+      'palette.empty': '没有匹配的条目',
+      'act.theme': '切换主题', 'act.theme.dark': '切换到深色', 'act.theme.light': '切换到浅色',
+      'act.lang': '切换语言：English', 'act.lang.zh': '切换语言：中文',
+      'act.email': '复制邮箱', 'act.github': '打开 GitHub 主页',
+      'toast.email': '邮箱已复制', 'toast.emailNone': '作者没公开邮箱，先去 GitHub 留言',
+      'toast.link': '链接已复制', 'toast.linkFail': '复制失败，请手动复制地址栏',
+      'toast.preview': '预览已加载：第三方页面在本页内运行',
+      'i18n.name': '中文'
+    },
+    en: {
+      'skip': 'Skip to work',
+      'nav.work': 'Work', 'nav.timeline': 'Timeline', 'nav.about': 'Approach', 'nav.contact': 'Contact',
+      'tool.search': 'Search',
+      'hero.label': 'Independent developer · 2026',
+      'hero.title': 'I build <em>small, complete</em> things.',
+      'hero.lead': 'Browser games, offline utilities, reproducible notes. <b>One file, no dependencies, works offline</b>; constraints first, design second; conclusions that can be falsified.',
+      'hero.cta.work': 'See the work',
+      'hero.cta.contact': 'Copy email',
+      'hero.cta.contactAlt': 'Get in touch',
+      'stat.repos': 'public projects', 'stat.live': 'playable live', 'stat.requests': 'external requests',
+      'aside.title': 'Index', 'aside.count': '8 / 8',
+      'work.idx': 'Work', 'work.title': 'Eight things you can open',
+      'work.lead': 'Playable ones open in place. Source-only ones ship a root cause, evidence and stated limits. Every project marks what was checked here and what is only the repo’s own claim.',
+      'work.search': 'Search projects / stacks',
+      'work.empty.title': 'No match', 'work.empty.desc': 'Try another keyword, or press ⌘K.',
+      'work.count': '{n} projects',
+      'chips.all': 'All',
+      'kind.web': 'web', 'kind.tool': 'tool', 'kind.research': 'research', 'kind.fix': 'fix',
+      'tl.idx': 'Timeline', 'tl.title': 'The last three months',
+      'about.idx': 'Approach', 'about.title': 'Constraints first,<br>then design.',
+      'about.p1': 'Everything I build shares one property: <b>it runs in a single file and needs no server</b>. Games, practice prototypes, small tools — zero distribution cost, opens and works, data stays in the browser.',
+      'about.p2': 'I prefer <b>verifiable</b> work: numbers where numbers exist, “unverified” where they do not. Research pieces state falsification conditions and limits instead of conclusions.',
+      'contact.idx': 'Contact', 'contact.title': 'Just say it',
+      'contact.lead': 'Collaboration, questions, corrections — all welcome. An issue on GitHub is fastest.',
+      'contact.github': 'GitHub profile', 'contact.github.hint': '8 public repositories',
+      'contact.issue': 'Open an issue', 'contact.issue.hint': 'Report a bug or ask for something',
+      'contact.email': 'Email', 'contact.email.hint': 'Click to copy',
+      'contact.repo': 'Site source', 'contact.repo.hint': 'One file, edit it directly',
+      'foot.note': 'Zero external requests · no tracking · one file',
+      'drawer.what': 'What it is', 'drawer.tradeoff': 'Constraint → decision', 'drawer.stack': 'Stack',
+      'drawer.preview': 'Live preview', 'drawer.meta': 'Meta', 'drawer.links': 'Links',
+      'drawer.previewLoad': 'Load live preview', 'drawer.previewHint': 'Requests github.io only on click, so first paint stays free.',
+      'drawer.copy': 'Copy link', 'drawer.open': 'Open project', 'drawer.source': 'Source',
+      'drawer.verify': 'Checked here', 'drawer.evidence': 'Evidence', 'meta.license': 'Licence',
+      'ev.demo': 'live demo', 'ev.docs': 'docs', 'ev.file': 'file', 'ev.patch': 'patch', 'ev.repro': 'repro',
+      'ev.report': 'report', 'ev.tests': 'tests', 'ev.video': 'sample', 'ev.readme': 'notes',
+      'meta.live': 'live', 'meta.source': 'source only', 'meta.updated': 'Updated',
+      'meta.language': 'Language', 'meta.kind': 'Kind', 'meta.status': 'Status', 'meta.repo': 'Repository',
+      'meta.none': 'not recorded',
+      'palette.ph': 'Search projects, jump, switch theme…',
+      'palette.nav': 'select', 'palette.run': 'run', 'palette.close': 'close',
+      'palette.projects': 'Projects', 'palette.jump': 'Jump to', 'palette.actions': 'Actions',
+      'palette.empty': 'Nothing matches',
+      'act.theme': 'Switch theme', 'act.theme.dark': 'Switch to dark', 'act.theme.light': 'Switch to light',
+      'act.lang': 'Language: 中文', 'act.lang.zh': 'Language: English',
+      'act.email': 'Copy email', 'act.github': 'Open GitHub profile',
+      'toast.email': 'Email copied', 'toast.emailNone': 'No public email — say hi on GitHub',
+      'toast.link': 'Link copied', 'toast.linkFail': 'Copy failed — use the address bar',
+      'toast.preview': 'Preview loaded: a third-party page now runs in this view',
+      'i18n.name': 'English'
+    }
+  };
+
+  const PRINCIPLES = [
+    { zh: ['单文件优先', '一个 HTML 能跑完就不拆构建链；分发 = 复制一个文件。'], en: ['One file first', 'If one HTML file can do it, skip the build chain. Distribution means copying a file.'] },
+    { zh: ['零依赖', '不引 CDN、不引第三方脚本；离线可用是验收项，不是口号。'], en: ['Zero dependencies', 'No CDN, no third-party scripts. Working offline is an acceptance test, not a slogan.'] },
+    { zh: ['先定约束', '显存、成本、时长、允许改动的行数——先写死，再设计。'], en: ['Constraints first', 'VRAM, cost, duration, lines you may touch — pin them before designing.'] },
+    { zh: ['保留否证', '结论附条件和证据；被否掉的假设照样留档。'], en: ['Keep the falsification', 'Attach conditions and evidence. Refuted hypotheses stay on record.'] }
+  ];
+
+  /* ---------------- 工具 ---------------- */
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const t = (k) => (I18N[state.lang] && I18N[state.lang][k]) || (I18N.zh[k] || k);
+  const fmtDate = (d) => String(d || '').replace(/-/g, '.');
+  const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const state = { lang: 'zh', theme: 'light', filter: 'all', query: '', openId: null, lastFocus: null };
+
+  try {
+    const l = localStorage.getItem('kb-lang');
+    if (l === 'zh' || l === 'en') state.lang = l;
+    const th = document.documentElement.getAttribute('data-theme');
+    if (th === 'dark' || th === 'light') state.theme = th;
+  } catch (e) {}
+
+  /* ---------------- 主题 ---------------- */
+  function setTheme(next, persist) {
+    state.theme = next;
+    document.documentElement.setAttribute('data-theme', next);
+    const meta = $$('meta[name="theme-color"]');
+    const c = next === 'dark' ? '#0c0e13' : '#f5f4f1';
+    meta.forEach(m => m.setAttribute('content', c));
+    if (persist) { try { localStorage.setItem('kb-theme', next); } catch (e) {} }
+    if (window.__heroDots) window.__heroDots.recolor();
+  }
+  function toggleTheme() { setTheme(state.theme === 'dark' ? 'light' : 'dark', true); }
+
+  /* ---------------- 语言 ---------------- */
+  function applyLang() {
+    document.documentElement.setAttribute('lang', state.lang === 'zh' ? 'zh-CN' : 'en');
+    document.documentElement.setAttribute('data-lang', state.lang);
+    $$('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+    $$('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+    $$('[data-i18n-ph]').forEach(el => { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+    $$('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
+    renderAll();
+  }
+  function toggleLang() {
+    state.lang = state.lang === 'zh' ? 'en' : 'zh';
+    try { localStorage.setItem('kb-lang', state.lang); } catch (e) {}
+    applyLang();
+  }
+
+  /* ---------------- 搜索 ---------------- */
+  /* 子串匹配而非子序列匹配：8 个作品规模下，子序列会把 "canvas" 模糊命中到全部条目 */
+  function projectScore(p, q) {
+    const terms = String(q).toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (!terms.length) return 1;
+    const fields = [p.title.zh, p.title.en, p.tagline.zh, p.tagline.en, p.what.zh, p.what.en, p.id,
+      KIND[p.kind].zh, KIND[p.kind].en].concat(p.stack || []).map(s => String(s).toLowerCase());
+    let total = 0;
+    for (const term of terms) {
+      let best = 0;
+      for (const f of fields) {
+        const idx = f.indexOf(term);
+        if (idx < 0) continue;
+        let s = 1 + (idx === 0 ? 0.8 : 0);
+        if (f === term) s += 1.6;
+        best = Math.max(best, s);
+      }
+      if (!best) return 0;
+      total += best;
+    }
+    return total;
+  }
+  function hit(q, text) {
+    const t = String(text).toLowerCase();
+    return q.split(/\s+/).filter(Boolean).every(term => t.indexOf(term.toLowerCase()) >= 0);
+  }
+
+  function visibleProjects() {
+    const q = state.query.trim();
+    let list = DATA.slice();
+    if (state.filter !== 'all') list = list.filter(p => p.kind === state.filter);
+    if (q) list = list.filter(p => projectScore(p, q) > 0).sort((a, b) => projectScore(b, q) - projectScore(a, q));
+    return list;
+  }
+
+  /* ---------------- 渲染 ---------------- */
+  function renderChips() {
+    const counts = { all: DATA.length };
+    DATA.forEach(p => { counts[p.kind] = (counts[p.kind] || 0) + 1; });
+    const order = ['all', 'web', 'tool', 'research', 'fix'];
+    $('#chips').innerHTML = order.filter(k => k === 'all' || counts[k]).map(k => {
+      const label = k === 'all' ? t('chips.all') : t('kind.' + k);
+      return '<button class="chip" type="button" aria-pressed="' + (state.filter === k) + '" data-kind="' + k + '">'
+        + esc(label) + '<span class="n">' + String(counts[k] || 0).padStart(2, '0') + '</span></button>';
+    }).join('');
+    $$('#chips .chip').forEach(btn => btn.addEventListener('click', () => {
+      state.filter = btn.getAttribute('data-kind');
+      renderChips(); renderCards();
+    }));
+  }
+
+  function cardHTML(p, i) {
+    const live = !!p.live;
+    return '<article class="card" data-id="' + p.id + '">'
+      + '<div class="card-top"><span class="card-idx">' + String(i + 1).padStart(2, '0') + '</span>'
+      + '<span class="kind">' + esc(t('kind.' + p.kind)) + '</span></div>'
+      + '<h3>' + esc(p.title[state.lang]) + (live ? '<i class="live" aria-hidden="true"></i>' : '') + '</h3>'
+      + '<p>' + esc(p.tagline[state.lang]) + '</p>'
+      + '<div class="stack">' + p.stack.slice(0, 3).map(s => '<span>' + esc(s) + '</span>').join('') + '</div>'
+      + '<div class="card-foot"><span>' + fmtDate(p.updated) + (live ? ' · ' + esc(t('meta.live')) : '') + '</span>'
+      + '<span class="go">' + esc(t('drawer.open')) + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>'
+      + '<button class="card-more" type="button" aria-label="' + esc(p.title[state.lang]) + ' — ' + esc(t('drawer.open')) + '"></button>'
+      + '</article>';
+  }
+
+  function renderCards() {
+    const list = visibleProjects();
+    $('#cards').innerHTML = list.map(cardHTML).join('');
+    $('#empty').hidden = list.length > 0;
+    $('#resultCount').textContent = t('work.count').replace('{n}', list.length);
+    $$('#cards .card').forEach(card => {
+      const id = card.getAttribute('data-id');
+      card.addEventListener('click', () => openProject(id));
+    });
+  }
+
+  function renderAside() {
+    $('#heroAside').innerHTML = DATA.map((p, i) =>
+      '<a class="aside-item" href="#work" data-id="' + p.id + '">'
+      + '<span class="idx">' + String(i + 1).padStart(2, '0') + '</span>'
+      + '<i class="dot' + (p.live ? ' on' : '') + '" aria-hidden="true"></i>'
+      + '<span class="nm">' + esc(p.title[state.lang]) + '</span>'
+      + '<span class="kd">' + esc(t('kind.' + p.kind)) + '</span></a>').join('');
+    $$('#heroAside .aside-item').forEach(a => a.addEventListener('click', (e) => {
+      e.preventDefault(); openProject(a.getAttribute('data-id'));
+    }));
+  }
+
+  function renderTimeline() {
+    const list = DATA.slice().sort((a, b) => (a.updated < b.updated ? 1 : -1));
+    $('#timeline').innerHTML = list.map(p =>
+      '<li class="tl-item"><time datetime="' + p.updated + '">' + fmtDate(p.updated) + '</time>'
+      + '<h3><a href="#work" data-id="' + p.id + '">' + esc(p.title[state.lang]) + '</a></h3>'
+      + '<p>' + esc(p.tagline[state.lang]) + '</p></li>').join('');
+    $$('#timeline a[data-id]').forEach(a => a.addEventListener('click', (e) => {
+      e.preventDefault(); openProject(a.getAttribute('data-id'));
+    }));
+  }
+
+  function renderPrinciples() {
+    $('#principles').innerHTML = PRINCIPLES.map((x, i) => {
+      const pair = state.lang === 'zh' ? x.zh : x.en;
+      return '<div class="principle"><span class="k">' + String(i + 1).padStart(2, '0') + '</span>'
+        + '<div><h3>' + esc(pair[0]) + '</h3><p>' + esc(pair[1]) + '</p></div></div>';
+    }).join('');
+  }
+
+  function renderContact() {
+    const cards = [
+      { label: t('contact.github'), value: 'github.com/kleinblue-dev', hint: t('contact.github.hint'), href: CONFIG.github, icon: 'gh' },
+      { label: t('contact.issue'), value: 'issues/new', hint: t('contact.issue.hint'), href: CONFIG.issue, icon: 'issue' },
+      { label: t('contact.repo'), value: 'kleinblue-dev.github.io', hint: t('contact.repo.hint'), href: CONFIG.repo, icon: 'code' }
+    ];
+    if (CONFIG.email) {
+      cards.unshift({ label: t('contact.email'), value: CONFIG.email, hint: t('contact.email.hint'), href: 'mailto:' + CONFIG.email, icon: 'mail' });
+    }
+    $('#contactGrid').innerHTML = cards.map(c =>
+      '<a class="contact-card" href="' + esc(c.href) + '"' + (c.href.indexOf('http') === 0 ? ' target="_blank" rel="noopener noreferrer"' : '') + '>'
+      + '<span class="lbl">' + esc(c.label) + '</span><span class="val">' + esc(c.value) + '</span>'
+      + '<span class="hint">' + esc(c.hint) + '</span></a>').join('');
+  }
+
+  function renderHeroCta() {
+    const btn = $('#btnContact');
+    if (!btn) return;
+    btn.querySelector('span').textContent = CONFIG.email ? t('hero.cta.contact') : t('hero.cta.contactAlt');
+  }
+
+  function renderFoot() {
+    $('#footMeta').textContent = '© ' + CONFIG.year + ' kleinblue-dev · ' + (state.lang === 'zh' ? '核验 ' : 'verified ') + CONFIG.verifiedAt + ' · ' + DATA.length + (state.lang === 'zh' ? ' 个作品' : ' projects');
+  }
+
+  function renderAll() {
+    renderChips(); renderCards(); renderAside(); renderTimeline(); renderPrinciples(); renderContact(); renderHeroCta(); renderFoot();
+    if (state.openId) renderDrawerBody(state.openId);
+  }
+
+  /* ---------------- 抽屉 ---------------- */
+  const drawer = $('#drawer'), scrim = $('#scrim'), drawerBody = $('#drawerBody');
+
+  function findProject(id) { return DATA.filter(p => p.id === id)[0]; }
+
+  function renderDrawerBody(id) {
+    const p = findProject(id); if (!p) return;
+    const status = p.live ? t('meta.live') : t('meta.source');
+    $('#drawerMeta').innerHTML = '<span>' + esc(t('kind.' + p.kind)) + '</span><span>·</span><span>' + esc(status) + '</span>';
+    $('#drawerTitle').textContent = p.title[state.lang];
+
+    let html = '';
+    html += '<div class="dblock"><h3>' + esc(t('drawer.what')) + '</h3><p>' + esc(p.what[state.lang]) + '</p></div>';
+
+    if (p.fp && p.fp.length) {
+      html += '<div class="dblock"><h3>' + esc(t('drawer.tradeoff')) + '</h3><ul class="tradeoff">';
+      p.fp.forEach(x => {
+        html += '<li><span class="k">' + esc(x.k[state.lang]) + '</span><span>' + esc(x.v[state.lang]) + '</span></li>';
+      });
+      html += '</ul></div>';
+    }
+
+    html += '<div class="dblock"><h3>' + esc(t('drawer.stack')) + '</h3><div class="stack">'
+      + p.stack.map(s => '<span>' + esc(s) + '</span>').join('') + '</div></div>';
+
+    if (p.live) {
+      html += '<div class="dblock"><h3>' + esc(t('drawer.preview')) + '</h3>'
+        + '<div class="preview" id="previewBox"><div class="preview-cta">'
+        + '<button class="btn-sm solid" type="button" id="loadPreview">' + esc(t('drawer.previewLoad')) + '</button>'
+        + '<span>' + esc(t('drawer.previewHint')) + '</span></div></div></div>';
+    }
+
+    html += '<div class="dblock"><h3>' + esc(t('drawer.meta')) + '</h3><table class="meta-table">'
+      + '<tr><th>' + esc(t('meta.updated')) + '</th><td>' + fmtDate(p.updated) + '</td></tr>'
+      + '<tr><th>' + esc(t('meta.language')) + '</th><td>' + esc(p.language || t('meta.none')) + '</td></tr>'
+      + '<tr><th>' + esc(t('meta.kind')) + '</th><td>' + esc(t('kind.' + p.kind)) + '</td></tr>'
+      + '<tr><th>' + esc(t('meta.status')) + '</th><td>' + esc(status) + '</td></tr>'
+      + (p.license ? '<tr><th>' + esc(t('meta.license')) + '</th><td>' + esc(p.license) + '</td></tr>' : '')
+      + '</table></div>';
+
+    if (p.verify) {
+      html += '<div class="dblock"><h3>' + esc(t('drawer.verify')) + ' · ' + CONFIG.verifiedAt + '</h3>'
+        + '<p class="verify-note">' + esc(p.verify[state.lang]) + '</p></div>';
+    }
+
+    if (p.ev && p.ev.length) {
+      html += '<div class="dblock"><h3>' + esc(t('drawer.evidence')) + '</h3><ul class="ev-list">';
+      p.ev.forEach(x => {
+        html += '<li><a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">'
+          + '<span>' + esc(t('ev.' + x.k)) + '</span>'
+          + (x.name ? '<em>' + esc(x.name) + '</em>' : '<em>' + esc(x.url.replace(/^https?:\/\//, '').slice(0, 42)) + '</em>')
+          + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></li>';
+      });
+      html += '</ul></div>';
+    }
+
+    html += '<div class="dblock"><div class="btn-row">'
+      + (p.live ? '<a class="btn-sm solid" href="' + esc(p.live) + '" target="_blank" rel="noopener noreferrer">' + esc(t('drawer.open')) + ' ↗</a>' : '')
+      + '<a class="btn-sm" href="' + esc(p.source) + '" target="_blank" rel="noopener noreferrer">' + esc(t('drawer.source')) + ' ↗</a>'
+      + '<button class="btn-sm" type="button" id="copyLink">' + esc(t('drawer.copy')) + '</button>'
+      + '</div></div>';
+
+    drawerBody.innerHTML = html;
+    const lp = $('#loadPreview');
+    if (lp) lp.addEventListener('click', () => {
+      $('#previewBox').innerHTML = '<iframe title="' + esc(p.title[state.lang]) + '" src="' + esc(p.live) + '" loading="lazy" referrerpolicy="no-referrer"></iframe>';
+      toast(t('toast.preview'));
+    });
+    const cl = $('#copyLink');
+    if (cl) cl.addEventListener('click', () => copyText(location.origin + location.pathname + '#/work/' + p.id, t('toast.link'), t('toast.linkFail')));
+  }
+
+  function openProject(id, skipHash) {
+    const p = findProject(id); if (!p) return;
+    state.openId = id;
+    drawer.inert = false;
+    renderDrawerBody(id);
+    drawer.classList.add('on'); drawer.setAttribute('aria-hidden', 'false');
+    scrim.hidden = false; requestAnimationFrame(() => scrim.classList.add('on'));
+    document.body.style.overflow = 'hidden';
+    state.lastFocus = document.activeElement;
+    setTimeout(() => { const b = $('#drawerClose'); if (b) b.focus(); }, 60);
+    if (!skipHash) { try { history.pushState({ p: id }, '', '#/work/' + id); } catch (e) { location.hash = '#/work/' + id; } }
+  }
+
+  function closeDrawer() {
+    if (!state.openId) return;
+    state.openId = null;
+    drawer.inert = true;
+    drawer.classList.remove('on'); drawer.setAttribute('aria-hidden', 'true');
+    scrim.classList.remove('on');
+    setTimeout(() => { scrim.hidden = true; }, 260);
+    document.body.style.overflow = '';
+    if (state.lastFocus && state.lastFocus.focus) state.lastFocus.focus();
+    if (location.hash.indexOf('#/work/') === 0) { try { history.pushState({}, '', location.pathname + location.search); } catch (e) { location.hash = ''; } }
+  }
+
+  $('#drawerClose').addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+
+  /* 焦点陷阱 + Esc */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if ($('#palette').classList.contains('on')) { closePalette(); return; }
+      if (state.openId) { closeDrawer(); return; }
+    }
+    if (e.key === 'Tab' && state.openId) {
+      const f = $$('#drawer a[href], #drawer button, #drawer iframe, #drawer [tabindex]:not([tabindex="-1"])')
+        .filter(el => el.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ---------------- 命令面板 ---------------- */
+  const palette = $('#palette'), paletteInput = $('#paletteInput'), paletteList = $('#paletteList');
+  let paletteItems = [], paletteSel = 0;
+
+  function buildPalette() {
+    const q = paletteInput.value.trim();
+    const groups = [];
+    const proj = DATA.map((p, i) => ({
+      group: t('palette.projects'),
+      label: p.title[state.lang],
+      hint: t('kind.' + p.kind),
+      key: p.title.zh + ' ' + p.title.en + ' ' + p.stack.join(' ') + ' ' + p.id,
+      run: () => { closePalette(); openProject(p.id); }
+    })).filter(x => !q || hit(q, x.key) || hit(q, x.label));
+
+    const navs = [
+      ['work', '01'], ['timeline', '02'], ['about', '03'], ['contact', '04']
+    ].map(([id, num]) => ({
+      group: t('palette.jump'),
+      label: t('nav.' + id),
+      hint: num,
+      key: id + ' ' + t('nav.' + id),
+      run: () => { closePalette(); const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' }); }
+    })).filter(x => !q || hit(q, x.key));
+
+    const acts = [
+      { label: state.theme === 'dark' ? t('act.theme.light') : t('act.theme.dark'), hint: 'T', key: 'theme dark light 主题 深色 浅色', run: () => { closePalette(); toggleTheme(); } },
+      { label: t('act.lang'), hint: 'L', key: 'language lang 语言 english 中文', run: () => { closePalette(); toggleLang(); } },
+      CONFIG.email
+        ? { label: t('act.email'), hint: '@', key: 'email copy 邮箱 复制', run: () => { closePalette(); copyEmail(); } }
+        : { label: t('act.github'), hint: '↗', key: 'github 主页 open', run: () => { closePalette(); window.open(CONFIG.github, '_blank', 'noopener'); } }
+    ].filter(x => !q || hit(q, x.key) || hit(q, x.label));
+
+    if (proj.length) groups.push({ name: t('palette.projects'), items: proj });
+    if (navs.length) groups.push({ name: t('palette.jump'), items: navs });
+    if (acts.length) groups.push({ name: t('palette.actions'), items: acts });
+
+    paletteItems = [];
+    let html = '';
+    groups.forEach(g => {
+      html += '<div class="pgroup">' + esc(g.name) + '</div>';
+      g.items.forEach(it => {
+        const i = paletteItems.length;
+        paletteItems.push(it);
+        html += '<div class="pitem" role="option" id="pi-' + i + '" data-i="' + i + '" aria-selected="false">'
+          + '<span class="pi">' + (it.hint || '') + '</span><span class="pt">' + esc(it.label) + '</span></div>';
+      });
+    });
+    if (!paletteItems.length) html = '<div class="pgroup">' + esc(t('palette.empty')) + '</div>';
+    paletteList.innerHTML = html;
+    paletteSel = 0;
+    paintPaletteSel();
+    $$('#paletteList .pitem').forEach(el => {
+      el.addEventListener('mouseenter', () => { paletteSel = parseInt(el.getAttribute('data-i'), 10); paintPaletteSel(); });
+      el.addEventListener('click', () => { const it = paletteItems[parseInt(el.getAttribute('data-i'), 10)]; if (it) it.run(); });
+    });
+  }
+  function paintPaletteSel() {
+    $$('#paletteList .pitem').forEach(el => {
+      const sel = parseInt(el.getAttribute('data-i'), 10) === paletteSel;
+      el.setAttribute('aria-selected', sel ? 'true' : 'false');
+      if (sel) { el.scrollIntoView({ block: 'nearest' }); paletteInput.setAttribute('aria-activedescendant', el.id); }
+    });
+  }
+  function openPalette() {
+    buildPalette();
+    palette.inert = false;
+    palette.classList.add('on'); palette.setAttribute('aria-hidden', 'false');
+    state.lastFocus = document.activeElement;
+    paletteInput.value = '';
+    buildPalette();
+    setTimeout(() => paletteInput.focus(), 30);
+  }
+  function closePalette() {
+    palette.inert = true;
+    palette.classList.remove('on'); palette.setAttribute('aria-hidden', 'true');
+    if (state.lastFocus && state.lastFocus.focus) state.lastFocus.focus();
+  }
+  $('#btnPalette').addEventListener('click', openPalette);
+  paletteInput.addEventListener('input', buildPalette);
+  paletteInput.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); paletteSel = Math.min(paletteSel + 1, paletteItems.length - 1); paintPaletteSel(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); paletteSel = Math.max(paletteSel - 1, 0); paintPaletteSel(); }
+    else if (e.key === 'Enter') { e.preventDefault(); const it = paletteItems[paletteSel]; if (it) it.run(); }
+  });
+  $$('[data-close-palette]').forEach(el => el.addEventListener('click', closePalette));
+
+  /* ---------------- 复制 / Toast ---------------- */
+  let toastTimer = 0;
+  function toast(msg) {
+    const el = $('#toast');
+    el.textContent = msg; el.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('on'), 2200);
+  }
+  function copyText(text, okMsg, failMsg) {
+    const done = () => toast(okMsg);
+    const fail = () => toast(failMsg);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(() => legacyCopy(text) ? done() : fail());
+    } else { legacyCopy(text) ? done() : fail(); }
+  }
+  function legacyCopy(text) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch (e) { return false; }
+  }
+  function copyEmail() {
+    if (CONFIG.email) copyText(CONFIG.email, t('toast.email'), t('toast.linkFail'));
+    else { toast(t('toast.emailNone')); }
+  }
+  $('#btnContact').addEventListener('click', () => {
+    if (CONFIG.email) { copyEmail(); }
+    else {
+      const el = document.getElementById('contact');
+      if (el) el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    }
+  });
+  $('#btnTheme').addEventListener('click', toggleTheme);
+  $('#btnLang').addEventListener('click', toggleLang);
+
+  /* ---------------- 搜索框 ---------------- */
+  const searchEl = $('#searchInput');
+  let searchTimer = 0;
+  searchEl.addEventListener('input', () => {
+    state.query = searchEl.value;
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(renderCards, 90);
+  });
+  searchEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { searchEl.value = ''; state.query = ''; renderCards(); searchEl.blur(); }
+  });
+
+  /* ---------------- 快捷键 ---------------- */
+  document.addEventListener('keydown', (e) => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || '')) || e.target.isContentEditable;
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); openPalette(); return; }
+    if (!typing && e.key === '/') { e.preventDefault(); searchEl.focus(); return; }
+    if (!typing && e.key === 't') { toggleTheme(); }
+    if (!typing && e.key === 'l') { toggleLang(); }
+  });
+
+  /* ---------------- 滚动进度 + 导航高亮 ---------------- */
+  const progressBar = $('#progressBar');
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if ('IntersectionObserver' in window) {
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          $$('.nav-links a').forEach(a => a.setAttribute('aria-current', a.getAttribute('data-nav') === en.target.id ? 'true' : 'false'));
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    ['work', 'timeline', 'about', 'contact'].forEach(id => { const el = document.getElementById(id); if (el) spy.observe(el); });
+  }
+
+  /* ---------------- Hero 点阵（签名交互） ---------------- */
+  function initHero() {
+    const cv = $('#heroCanvas'); if (!cv || !cv.getContext) return;
+    const ctx = cv.getContext('2d');
+    let w = 0, h = 0, dpr = 1, dots = [], raf = 0, running = false;
+    const ptr = { x: -9999, y: -9999, on: false };
+    const staticMode = reduceMotion();
+
+    function color() {
+      const v = getComputedStyle(document.documentElement).getPropertyValue('--ikb').trim();
+      return v || '#002FA7';
+    }
+    function resize() {
+      const r = cv.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = Math.max(1, r.width); h = Math.max(1, r.height);
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const gap = w < 700 ? 34 : 32;
+      dots = [];
+      for (let y = gap * 0.9; y < h; y += gap) {
+        for (let x = gap * 0.9; x < w; x += gap) {
+          dots.push({ x: x, y: y, s: 0.9, a: 0.085 });
+        }
+      }
+      draw(0);
+    }
+    function draw(dt) {
+      if (!ctx) return;
+      const c = color();
+      ctx.clearRect(0, 0, w, h);
+      const active = ptr.on && !staticMode;
+      for (let i = 0; i < dots.length; i++) {
+        const d = dots[i];
+        let inf = 0;
+        if (active) {
+          const dx = d.x - ptr.x, dy = d.y - ptr.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          inf = Math.max(0, 1 - dist / 170);
+          inf = inf * inf * (3 - 2 * inf);
+        }
+        const targetS = 0.85 + inf * 2.6;
+        const targetA = 0.085 + inf * 0.62;
+        const k = 1 - Math.pow(0.001, dt / 1000);
+        d.s += (targetS - d.s) * Math.min(1, k + 0.02);
+        d.a += (targetA - d.a) * Math.min(1, k + 0.02);
+        if (d.s < 0.15) continue;
+        ctx.globalAlpha = d.a;
+        ctx.fillStyle = c;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.s, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    let last = 0;
+    function loop(ts) {
+      if (!running) return;
+      const dt = last ? Math.min(64, ts - last) : 16;
+      last = ts;
+      draw(dt);
+      raf = requestAnimationFrame(loop);
+    }
+    function start() { if (running || staticMode) return; running = true; last = 0; raf = requestAnimationFrame(loop); }
+    function stop() { running = false; cancelAnimationFrame(raf); }
+    function ensureLoop() {
+      if (staticMode) return;
+      if (ptr.on) start();
+      else setTimeout(() => { if (!ptr.on) { stop(); draw(16); } }, 900);
+    }
+    cv.parentElement.addEventListener('pointermove', (e) => {
+      const r = cv.getBoundingClientRect();
+      ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true;
+      start(); draw(16);
+    }, { passive: true });
+    cv.parentElement.addEventListener('pointerleave', () => { ptr.on = false; ensureLoop(); });
+    window.addEventListener('resize', resize);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else if (ptr.on) start(); });
+
+    const mo = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (mo && mo.addEventListener) mo.addEventListener('change', () => { if (!localStorage.getItem('kb-theme')) { setTheme(mo.matches ? 'dark' : 'light', false); draw(16); } });
+
+    resize();
+    window.__heroDots = { recolor: () => draw(16), resize: resize };
+  }
+
+  /* ---------------- hash 路由 ---------------- */
+  function routeFromHash() {
+    const m = /^#\/work\/([a-z0-9\-]+)$/.exec(location.hash || '');
+    if (m && findProject(m[1])) { openProject(m[1], true); return; }
+    if (state.openId) closeDrawer();
+  }
+  window.addEventListener('hashchange', routeFromHash);
+  window.addEventListener('popstate', routeFromHash);
+
+  /* ---------------- 启动 ---------------- */
+  drawer.inert = true;
+  palette.inert = true;
+  applyLang();
+  initHero();
+  routeFromHash();
+  onScroll();
+})();
+</script>
+</body>
+</html>
