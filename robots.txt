@@ -1,4 +1,2 @@
 User-agent: *
-Allow: /
-
-Sitemap: https://kleinblue-dev.github.io/sitemap.xml
+Disallow: /
